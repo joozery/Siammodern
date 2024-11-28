@@ -26,13 +26,13 @@ const Sidebar = () => {
       </div>
 
       <div className="menuDiv">
-        <h3 className="divTitle">
+        <h3 className="divTitle font-bold"> 
           QUICK MENU
         </h3>
         <ul className="menuLists grid">
 
           <li className="listItem">
-            <a href="#" className='menuLink flex'>
+            <a href="/dashboard" className='menuLink flex'>
                 <IoMdSpeedometer className="icon"/>
                 <span className="smallText">
                   Dashboard
@@ -41,35 +41,35 @@ const Sidebar = () => {
           </li>
 
           <li className="listItem">
-            <a href="#" className='menuLink flex'>
+            <Link to="/Stock" className='menuLink flex'>
                 <MdDeliveryDining className="icon"/>
                 <span className="smallText">
                   คลังสินค้า
                 </span>
-            </a>
+            </Link>
           </li>
           
           <li className="listItem">
-            <a href="#" className='menuLink flex'>
+           <Link to="/Suppier" className='menuLink flex'>
                 <MdOutlineExplore className="icon"/>
                 <span className="smallText">
                   suppliers
                 </span>
-            </a>
+            </Link>
           </li>
 
           <li className="listItem">
-            <a href="#" className='menuLink flex'>
+            <Link to="/Purchase" className='menuLink flex'>
                 <BsTrophy className="icon"/>
                 <span className="smallText">
                   แผนกจัดซื้อ
                 </span>
-            </a>
+            </Link>
           </li>
 
           
           <li className="listItem">
-            <Link to="/user-management" className='menuLink flex'>
+            <Link to="/UserManagement" className='menuLink flex'>
                 <BsTrophy className="icon"/>
                 <span className="smallText">
                   การจัดการผู้ใช้งาน
@@ -78,12 +78,12 @@ const Sidebar = () => {
           </li>
           
           <li className="listItem">
-            <a href="#" className='menuLink flex'>
+            <Link to="/Requisition" className='menuLink flex'>
                 <BsTrophy className="icon"/>
                 <span className="smallText">
-                  Ivoice
+                  ใบขอเบิกพัสดุ
                 </span>
-            </a>
+            </Link>
           </li>
           
           <li className="listItem">
@@ -96,12 +96,12 @@ const Sidebar = () => {
           </li>
           
           <li className="listItem">
-            <a href="#" className='menuLink flex'>
+            <Link to="/Receipt" className='menuLink flex'>
                 <BsTrophy className="icon"/>
                 <span className="smallText">
-                  PO
+                  บันทึกใบขอซื้อ
                 </span>
-            </a>
+            </Link>
           </li>
 
         </ul>
@@ -110,7 +110,7 @@ const Sidebar = () => {
 
 
       <div className="settingsDiv">
-        <h3 className="divTitle">
+        <h3 className="divTitle font-bold">
           SETTINGS
         </h3>
         <ul className="menuLists grid">
@@ -142,14 +142,6 @@ const Sidebar = () => {
             </a>
           </li>
 
-          <li className="listItem">
-            <a href="#" className='menuLink flex'>
-                <BsCreditCard2Front className="icon"/>
-                <span className="smallText">
-                  Billing
-                </span>
-            </a>
-          </li>
 
           <li className="listItem logOutBtn">
             <a href="/" className='menuLink flex'>

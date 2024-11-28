@@ -1,0 +1,12 @@
+table.user-manage tr th {
+    font-size: 13px;
+    padding: 0.50rem 0.25rem;
+}
+
+table.user-manage tbody tr td:last-child{
+    text-align: -webkit-center;
+}
+
+table.user-manage thead tr th:last-child{
+    text-align: center;
+}
