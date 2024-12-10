@@ -1,0 +1,75 @@
+.notification-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    z-index: 1000;
+    font-family: Arial, sans-serif;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.notification-popup.success {
+    border: 2px solid #4CAF50;
+}
+
+.notification-popup.error {
+    border: 2px solid #F44336;
+}
+
+.notification-popup .icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.notification-popup h3 {
+    margin: 10px 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.notification-popup p {
+    font-size: 1rem;
+    color: #555;
+    margin: 10px 0;
+}
+
+.notification-popup button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.notification-popup.error button {
+    background-color: #F44336;
+}
+
+.notification-popup button:hover {
+    background-color: #3e8e41;
+}
+
+.notification-popup.error button:hover {
+    background-color: #d32f2f;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}

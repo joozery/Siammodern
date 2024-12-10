@@ -8,5 +8,5 @@ table.user-manage tbody tr td:last-child{
 }
 
 table.user-manage thead tr th:last-child{
-    text-align: center;
+    text-align: left;
 }
