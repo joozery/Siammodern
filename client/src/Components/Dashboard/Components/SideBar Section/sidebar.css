@@ -139,6 +139,7 @@
   position: relative;
   color: var(--textColor);
   z-index: 1000;
+  background: white;
 }
 .sideBar .sideBarCard .cardContent .circle1, .sideBar .sideBarCard .cardContent .circle2 {
   position: absolute;

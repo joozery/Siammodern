@@ -1,0 +1,139 @@
+/* Overlay */
+.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+  }
+  
+  /* Popup Container */
+  .popup-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 80%;
+    width: 800px;
+    max-height: 90%;
+    overflow-y: auto;
+    padding: 24px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Header */
+  .popup-header {
+    border-bottom: 2px solid #e0f2f1;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  .popup-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0277bd;
+  }
+  
+  .popup-header .sub-title {
+    font-size: 0.85rem;
+    color: #666666;
+  }
+  
+  /* Form Labels */
+  .form-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 4px;
+    display: block;
+  }
+  
+  /* Form Inputs */
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+  }
+  
+  .form-input:focus,
+  .form-textarea:focus {
+    border-color: #0288d1;
+    outline: none;
+    box-shadow: 0px 0px 4px rgba(2, 136, 209, 0.4);
+  }
+  
+  /* Browse Button */
+  .browse-button {
+    background-color: #0288d1;
+    color: #ffffff;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  
+  .browse-button:hover {
+    background-color: #0277bd;
+  }
+  
+  /* Section Titles */
+  .section-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  /* Buttons */
+  button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  
+  button.cancel-button {
+    background-color: #cccccc;
+    color: white;
+    margin-right: 8px;
+    border: none;
+  }
+  
+  button.cancel-button:hover {
+    background-color: #b0b0b0;
+  }
+  
+  button.create-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+  }
+  
+  button.create-button:hover {
+    background-color: #43a047;
+  }
+  
+  /* Scrollbar */
+  .popup-container::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .popup-container::-webkit-scrollbar-thumb {
+    background: #cccccc;
+    border-radius: 5px;
+  }
+  
+  .popup-container::-webkit-scrollbar-thumb:hover {
+    background: #aaaaaa;
+  }
+  

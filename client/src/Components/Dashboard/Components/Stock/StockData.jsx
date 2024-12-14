@@ -1,11 +1,13 @@
-// Stock.js
-import React, { useState } from "react";
-import { stockData } from "./mockData";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { FiSearch } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import './StockData.css'
+import AddProductPopup from "./AddProductPopup";
+import ProductDetailPopup from "./ProductDetailPopup";
+import "./StockData.css";
 
 export default function Stock() {
+  const [products, setProducts] = useState([]); // State สำหรับเก็บข้อมูลสินค้า
   const [selectedRows, setSelectedRows] = useState([]);
   const [filters, setFilters] = useState({
     category: "",
@@ -16,17 +18,31 @@ export default function Stock() {
     productCode: "",
     itemName: "",
   });
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  // ฟังก์ชันจัดการการกรองข้อมูล
-  const filteredData = stockData.filter((item) => {
+  // ดึงข้อมูลสินค้าจาก API
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:3002/products");
+        setProducts(response.data.data); // สมมติว่าข้อมูลอยู่ใน response.data.data
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  // ฟังก์ชันกรองข้อมูลสินค้า
+  const filteredData = products.filter((item) => {
     return (
       (filters.category === "" || item.category.toLowerCase().includes(filters.category.toLowerCase())) &&
       (filters.number === "" || item.number.toLowerCase().includes(filters.number.toLowerCase())) &&
       (filters.model === "" || item.model.toLowerCase().includes(filters.model.toLowerCase())) &&
       (filters.color === "" || item.color.toLowerCase().includes(filters.color.toLowerCase())) &&
       (filters.size === "" || item.size.toLowerCase().includes(filters.size.toLowerCase())) &&
-      (filters.productCode === "" || item.productCode.toLowerCase().includes(filters.productCode.toLowerCase())) &&
-      (filters.itemName === "" || item.itemName.toLowerCase().includes(filters.itemName.toLowerCase()))
+      (filters.productCode === "" || item.sku.toLowerCase().includes(filters.productCode.toLowerCase())) &&
+      (filters.itemName === "" || item.product_name.toLowerCase().includes(filters.itemName.toLowerCase()))
     );
   });
 
@@ -63,9 +79,14 @@ export default function Stock() {
       <div className="flex justify-between w-full border-b border-black pb-4">
         <h1 className="text-md sm:text-xl font-bold text-gray-800">สต็อกสินค้า (Stock Management)</h1>
         <div className="flex flex-row space-x-3 h-full">
-          <button className="flex items-center justify-center bg-white rounded-lg shadow w-12 h-10 hover:bg-gray-50"><RiDeleteBin5Line /></button>
-          <button className="flex items-center justify-center bg-green-500 text-white rounded-lg shadow hover:bg-green-600 w-20 h-10">
-            <span className="text-lg font-semibold">+ Add</span>
+          <button className="flex items-center justify-center bg-white rounded-lg shadow w-12 h-10 hover:bg-gray-50">
+            <RiDeleteBin5Line />
+          </button>
+          <button
+            onClick={() => setIsPopupOpen(true)}
+            className="flex items-center justify-center bg-green-500 text-white rounded-lg shadow hover:bg-green-600 w-20 h-10"
+          >
+            <span className="text-lg font-semibold">Add</span>
           </button>
         </div>
       </div>
@@ -202,13 +223,12 @@ export default function Stock() {
       {/* Table Section */}
       <div className="bg-white border border-gray-300 shadow overflow-auto w-full">
         <div className="p-4 border-b bg-gray-50">
-          <span className="text-lg font-semibold text-gray-700">หมวดหมู่1</span>
+          <span className="text-lg font-semibold text-gray-700">หมวดหมู่สินค้า</span>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr className="bg-green-200">
-                {/* Checkbox Header */}
                 <th scope="col" className="px-4 py-3">
                   <input
                     type="checkbox"
@@ -217,83 +237,17 @@ export default function Stock() {
                     checked={selectedRows.length === filteredData.length && filteredData.length > 0}
                   />
                 </th>
-                {/* รหัสสินค้า */}
-                <th scope="col" className="text-sm font-medium text-gray-700 w-24">
-                  <div className="flex flex-col">
-                    <span>รหัสสินค้า</span>
-                    <span className="text-xs text-gray-500">Product Code</span>
-                  </div>
-                </th>
-                {/* รายการ */}
-                <th scope="col" className="text-sm font-medium text-gray-700 w-32">
-                  <div className="flex flex-col">
-                    <span>รายการ</span>
-                    <span className="text-xs text-gray-500">Item</span>
-                  </div>
-                </th>
-                {/* เบอร์ */}
-                <th scope="col" className="text-sm font-medium text-gray-700">
-                  <div className="flex flex-col">
-                    <span>เบอร์</span>
-                    <span className="text-xs text-gray-500">Number</span>
-                  </div>
-                </th>
-                {/* รุ่น */}
-                <th scope="col" className="text-sm font-medium text-gray-700">
-                  <div className="flex flex-col">
-                    <span>รุ่น</span>
-                    <span className="text-xs text-gray-500">Model</span>
-                  </div>
-                </th>
-                {/* สี */}
-                <th scope="col" className="text-sm font-medium text-gray-700">
-                  <div className="flex flex-col">
-                    <span>สี</span>
-                    <span className="text-xs text-gray-500">Color</span>
-                  </div>
-                </th>
-                {/* ขนาด */}
-                <th scope="col" className="text-sm font-medium text-gray-700">
-                  <div className="flex flex-col">
-                    <span>ขนาด</span>
-                    <span className="text-xs text-gray-500">Size</span>
-                  </div>
-                </th>
-                {/* ราคาต้นทุน (ต่อหน่วย) */}
-                <th scope="col" className="text-sm font-medium text-gray-700 w-32">
-                  <div className="flex flex-col">
-                    <span>ราคาต้นทุน (ต่อหน่วย)</span>
-                    <span className="text-xs text-gray-500">Cost Price</span>
-                  </div>
-                </th>
-                {/* สถานที่จัดเก็บ */}
-                <th scope="col" className="text-sm font-medium text-gray-700 w-32">
-                  <div className="flex flex-col">
-                    <span>สถานที่จัดเก็บ</span>
-                    <span className="text-xs text-gray-500">Storage Location</span>
-                  </div>
-                </th>
-                {/* สถานะสต๊อก */}
-                <th scope="col" className="text-sm font-medium text-gray-700">
-                  <div className="flex flex-col">
-                    <span>สถานะสต๊อก</span>
-                    <span className="text-xs text-gray-500">Stock Status</span>
-                  </div>
-                </th>
-                {/* จำนวน */}
-                <th scope="col" className="text-sm font-medium text-gray-700">
-                  <div className="flex flex-col">
-                    <span>จำนวน</span>
-                    <span className="text-xs text-gray-500">Quantity</span>
-                  </div>
-                </th>
-                {/* หน่วย */}
-                <th scope="col" className="text-sm font-medium text-gray-700">
-                  <div className="flex flex-col">
-                    <span>หน่วย</span>
-                    <span className="text-xs text-gray-500">Unit</span>
-                  </div>
-                </th>
+                <th scope="col" className="text-sm font-medium text-gray-700">รหัสสินค้า</th>
+                <th scope="col" className="text-sm font-medium text-gray-700">รายการ</th>
+                <th scope="col" className="text-sm font-medium text-gray-700">เบอร์</th>
+                <th scope="col" className="text-sm font-medium text-gray-700">รุ่น</th>
+                <th scope="col" className="text-sm font-medium text-gray-700">สี</th>
+                <th scope="col" className="text-sm font-medium text-gray-700">ขนาด</th>
+                <th scope="col" className="text-sm font-medium text-gray-700">ราคาต้นทุน</th>
+                <th scope="col" className="text-sm font-medium text-gray-700">สถานที่จัดเก็บ</th>
+                <th scope="col" className="text-sm font-medium text-gray-700">สถานะสต๊อก</th>
+                <th scope="col" className="text-sm font-medium text-gray-700">จำนวน</th>
+                <th scope="col" className="text-sm font-medium text-gray-700">หน่วย</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
@@ -307,25 +261,26 @@ export default function Stock() {
                       onChange={() => handleCheckboxChange(item.id)}
                     />
                   </td>
-                  <td className=" text-sm text-gray-900">{item.productCode}</td>
-                  <td className=" text-sm text-gray-900">{item.itemName}</td>
-                  <td className=" text-sm text-gray-900">{item.number}</td>
-                  <td className=" text-sm text-gray-900">{item.model}</td>
-                  <td className=" text-sm text-gray-900">{item.color}</td>
-                  <td className=" text-sm text-gray-900">{item.size}</td>
-                  <td className=" text-sm text-gray-900">{item.costPrice}</td>
-                  <td className=" text-sm text-gray-900">{item.storageLocation}</td>
-                  <td className=" text-sm text-gray-900">{item.stockStatus}</td>
-                  <td className=" text-sm text-gray-900">
-                    {item.quantity} {item.unit}
-                  </td>
-                  <td className=" text-sm text-gray-900">{item.unit}</td>
+                  <td className="text-sm text-gray-900">{item.sku}</td>
+                  <td className="text-sm text-gray-900">{item.product_name}</td>
+                  <td className="text-sm text-gray-900">{item.number}</td>
+                  <td className="text-sm text-gray-900">{item.model}</td>
+                  <td className="text-sm text-gray-900">{item.color}</td>
+                  <td className="text-sm text-gray-900">{item.size}</td>
+                  <td className="text-sm text-gray-900">{item.cost_price}</td>
+                  <td className="text-sm text-gray-900">{item.storage_location}</td>
+                  <td className="text-sm text-gray-900">{item.status}</td>
+                  <td className="text-sm text-gray-900">{item.quantity}</td>
+                  <td className="text-sm text-gray-900">{item.unit}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Popup Section */}
+      {isPopupOpen && <AddProductPopup onClose={() => setIsPopupOpen(false)} />}
     </div>
   );
 }

@@ -9,7 +9,14 @@ import {IoMdSpeedometer} from 'react-icons/io'
 import {MdDeliveryDining} from 'react-icons/md'
 import {MdOutlineExplore} from 'react-icons/md'
 import {BsTrophy} from 'react-icons/bs'
+import { FaWarehouse } from 'react-icons/fa'; // คลังสินค้า
 import {AiOutlinePieChart} from 'react-icons/ai'
+import { FaTruck } from 'react-icons/fa';
+import { FaUsers } from 'react-icons/fa';
+import { FaClipboardList } from 'react-icons/fa';
+import { AiOutlineFileDone } from 'react-icons/ai';
+import { FaFileInvoice } from 'react-icons/fa'; // บันทึกใบขอซื้อ
+import { MdShoppingCart } from 'react-icons/md'; 
 import {BiTrendingUp} from 'react-icons/bi'
 import {MdOutlinePermContactCalendar} from 'react-icons/md'
 import {BsCreditCard2Front} from 'react-icons/bs'
@@ -42,7 +49,7 @@ const Sidebar = () => {
 
           <li className="listItem">
             <Link to="/Stock" className='menuLink flex'>
-                <MdDeliveryDining className="icon"/>
+                <FaWarehouse className="icon"/>
                 <span className="smallText">
                   คลังสินค้า
                 </span>
@@ -51,7 +58,7 @@ const Sidebar = () => {
           
           <li className="listItem">
            <Link to="/Suppier" className='menuLink flex'>
-                <MdOutlineExplore className="icon"/>
+                <FaTruck className="icon"/>
                 <span className="smallText">
                   suppliers
                 </span>
@@ -60,7 +67,7 @@ const Sidebar = () => {
 
           <li className="listItem">
             <Link to="/Purchase" className='menuLink flex'>
-                <BsTrophy className="icon"/>
+                <MdShoppingCart className="icon"/>
                 <span className="smallText">
                   แผนกจัดซื้อ
                 </span>
@@ -70,7 +77,7 @@ const Sidebar = () => {
           
           <li className="listItem">
             <Link to="/UserManagement" className='menuLink flex'>
-                <BsTrophy className="icon"/>
+                <FaUsers className="icon"/>
                 <span className="smallText">
                   การจัดการผู้ใช้งาน
                 </span>
@@ -79,7 +86,7 @@ const Sidebar = () => {
           
           <li className="listItem">
             <Link to="/Requisition" className='menuLink flex'>
-                <BsTrophy className="icon"/>
+                <FaClipboardList className="icon"/>
                 <span className="smallText">
                   ใบขอเบิกพัสดุ
                 </span>
@@ -88,7 +95,7 @@ const Sidebar = () => {
           
           <li className="listItem">
             <a href="#" className='menuLink flex'>
-                <BsTrophy className="icon"/>
+                <AiOutlineFileDone className="icon"/>
                 <span className="smallText">
                   สรุปรายการ
                 </span>
@@ -97,7 +104,7 @@ const Sidebar = () => {
           
           <li className="listItem">
             <Link to="/Receipt" className='menuLink flex'>
-                <BsTrophy className="icon"/>
+                <FaFileInvoice className="icon"/>
                 <span className="smallText">
                   บันทึกใบขอซื้อ
                 </span>
@@ -162,7 +169,7 @@ const Sidebar = () => {
           <div className="circle2"></div>
 
           <h3>Help Center</h3>
-          <p>Having trouble in Planti, please contact us from for more questions.</p>
+          <p>Having trouble in , please contact us from for more questions.</p>
 
           <button className='btn'>Go to help center</button>
         </div>

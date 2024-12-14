@@ -10,3 +10,24 @@ table.user-manage tbody tr td:last-child{
 table.user-manage thead tr th:last-child{
     text-align: left;
 }
+
+/* จัดข้อมูลในคอลัมน์ Surname, Job Position, Email address, Creation time ให้ชิดซ้าย */
+.user-manage td:nth-child(4),
+.user-manage td:nth-child(5),
+.user-manage td:nth-child(6),
+.user-manage td:nth-child(7),
+.user-manage td:nth-child(8),
+.user-manage td:nth-child(9) {
+    text-align: left;
+}
+
+/* Active/Inactive Status */
+.user-manage td .text-green-700 {
+    color: #4caf50; /* Green for active status */
+    font-weight: bold;
+}
+
+.user-manage td .text-gray-500 {
+    color: #aaa; /* Gray for inactive status */
+    font-weight: bold;
+}
