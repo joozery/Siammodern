@@ -78,7 +78,7 @@ function ContentUserManagement() {
             </div>
 
             <div className="bg-white shadow-md rounded-lg p-4">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex flex-wrap justify-between items-center mb-4">
                     <select
                         className="border p-2 rounded"
                         value={roles}
@@ -97,60 +97,62 @@ function ContentUserManagement() {
                     />
                 </div>
 
-                <table className="user-manage min-w-full bg-white border rounded-md">
-                    <thead className="bg-green-500/50">
-                        <tr>
-                            <th className="py-2 px-2 text-left">Actions</th>
-                            <th className="py-2 px-2 text-left">Profile</th>
-                            <th className="py-2 px-2 text-left">User name</th>
-                            <th className="py-2 px-2 text-left">Name</th>
-                            <th className="py-2 px-2 text-left">Surname</th>
-                            <th className="py-2 px-2 text-left">Job Position</th>
-                            <th className="py-2 px-2 text-left">Email address</th>
-                            <th className="py-2 px-2 text-left">Creation time</th>
-                            <th className="py-2 px-2 text-left">Active</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.length > 0 ? (
-                            users.map((user) => (
-                                <tr key={user.id} className="border-t hover:bg-gray-100">
-                                    <td className="py-2 px-2">
-                                        <button className="bg-green-700 text-white text-sm px-2 py-1 rounded flex items-center">
-                                            <FaCog className="mr-2" /> Settings
-                                        </button>
-                                    </td>
-                                    <td className="py-2 px-2">
-                                        <img
-                                            src={user.profile_image || "/default-profile.png"}
-                                            alt="Profile"
-                                            className="w-10 h-10 rounded-full border"
-                                        />
-                                    </td>
-                                    <td className="py-2 px-2">{user.user_name}</td>
-                                    <td className="py-2 px-2">{user.name}</td>
-                                    <td className="py-2 px-2">{user.surname}</td>
-                                    <td className="py-2 px-2">{user.job_position}</td>
-                                    <td className="py-2 px-2">{user.email_address}</td>
-                                    <td className="py-2 px-2">{user.created_at}</td>
-                                    <td className="py-2 px-2">
-                                        {user.active ? (
-                                            <span className="text-green-700 font-bold">กำลังใช้งาน</span>
-                                        ) : (
-                                            <span className="text-gray-500 font-bold">ไม่ใช้งาน</span>
-                                        )}
+                <div className="overflow-auto">
+                    <table className="user-manage min-w-full bg-white border rounded-md">
+                        <thead className="bg-green-500/50">
+                            <tr>
+                                <th className="py-2 px-2 text-left">Actions</th>
+                                <th className="py-2 px-2 text-left">Profile</th>
+                                <th className="py-2 px-2 text-left">User name</th>
+                                <th className="py-2 px-2 text-left">Name</th>
+                                <th className="py-2 px-2 text-left">Surname</th>
+                                <th className="py-2 px-2 text-left">Job Position</th>
+                                <th className="py-2 px-2 text-left">Email address</th>
+                                <th className="py-2 px-2 text-left">Creation time</th>
+                                <th className="py-2 px-2 text-left">Active</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.length > 0 ? (
+                                users.map((user) => (
+                                    <tr key={user.id} className="border-t hover:bg-gray-100">
+                                        <td className="py-2 px-2">
+                                            <button className="bg-green-700 text-white text-sm px-2 py-1 rounded flex items-center">
+                                                <FaCog className="mr-2" /> Settings
+                                            </button>
+                                        </td>
+                                        <td className="py-2 px-2">
+                                            <img
+                                                src={user.profile_image || "/default-profile.png"}
+                                                alt="Profile"
+                                                className="w-10 h-10 rounded-full border"
+                                            />
+                                        </td>
+                                        <td className="py-2 px-2">{user.user_name}</td>
+                                        <td className="py-2 px-2">{user.name}</td>
+                                        <td className="py-2 px-2">{user.surname}</td>
+                                        <td className="py-2 px-2">{user.job_position}</td>
+                                        <td className="py-2 px-2">{user.email_address}</td>
+                                        <td className="py-2 px-2">{user.created_at}</td>
+                                        <td className="py-2 px-2">
+                                            {user.active ? (
+                                                <span className="text-green-700 font-bold">กำลังใช้งาน</span>
+                                            ) : (
+                                                <span className="text-gray-500 font-bold">ไม่ใช้งาน</span>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="9" className="text-center py-4">
+                                        No users found
                                     </td>
                                 </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="9" className="text-center py-4">
-                                    No users found
-                                </td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
 
                 <div className="flex justify-between mt-4">
                     <button

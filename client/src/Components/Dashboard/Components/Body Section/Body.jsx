@@ -11,6 +11,7 @@ import SuppierData from '../Suppier/SuppierData';
 import PurchaseData from '../Purchase/PurchaseData';
 import RequisitionData from '../Requisition/RequisitionData';
 import ReceivingPurchaseData from '../ReceivingPurchase/ReceivingPurchaseData';
+import Priceparsionform from '../Priceparsion/Priceparsionform';
 
 const Body = () => {
 
@@ -34,6 +35,7 @@ const Body = () => {
       {currentPath === '/Purchase' && <PurchaseData />}
       {currentPath === '/Requisition' && <RequisitionData />}
       {currentPath === '/Receipt' && <ReceivingPurchaseData />}
+      {currentPath === '/Priceparsion' && <Priceparsionform />}
     </div>
   )
 }

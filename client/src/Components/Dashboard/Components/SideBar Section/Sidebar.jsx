@@ -39,12 +39,12 @@ const Sidebar = () => {
         <ul className="menuLists grid">
 
           <li className="listItem">
-            <a href="/dashboard" className='menuLink flex'>
+            <Link to="/dashboard" className='menuLink flex'>
                 <IoMdSpeedometer className="icon"/>
                 <span className="smallText">
                   Dashboard
                 </span>
-            </a>
+            </Link>
           </li>
 
           <li className="listItem">
@@ -107,6 +107,15 @@ const Sidebar = () => {
                 <FaFileInvoice className="icon"/>
                 <span className="smallText">
                   บันทึกใบขอซื้อ
+                </span>
+            </Link>
+          </li>
+
+          <li className="listItem">
+            <Link to="/Priceparsion" className='menuLink flex'>
+                <FaFileInvoice className="icon"/>
+                <span className="smallText">
+                  เปรียบเทียบราคา
                 </span>
             </Link>
           </li>
