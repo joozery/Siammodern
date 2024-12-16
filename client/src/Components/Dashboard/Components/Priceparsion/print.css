@@ -1,0 +1,57 @@
+/* print.css */
+@media print {
+    /* ปิด Margin ของหน้ากระดาษ */
+    @page {
+        margin: 0;
+    }
+
+    /* รีเซ็ต Body */
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* ซ่อนทุกองค์ประกอบอื่นนอกจากตาราง */
+    body * {
+        visibility: hidden; /* ซ่อนทุกอย่าง */
+    }
+
+    /* แสดงเฉพาะตารางที่ต้องการพิมพ์ */
+    #table-to-pdf, #table-to-pdf * {
+        visibility: visible; /* แสดงตารางและเนื้อหาภายใน */
+    }
+
+    #table-to-pdf {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        box-shadow: none !important; /* ลบ box-shadow */
+    }
+
+    /* ปรับรูปแบบตาราง */
+    table {
+        width: 100%;
+        border-collapse: collapse; /* รวมเส้นขอบ */
+        page-break-inside: avoid; /* ป้องกันการตัดตารางข้ามหน้า */
+    }
+
+    /* เพิ่มเส้นขอบให้หัวตารางและข้อมูล */
+    th, td {
+        border: 1px solid #000; /* เส้นขอบสีดำ */
+        padding: 8px; /* ระยะห่างขอบใน */
+        text-align: center; /* จัดกลางข้อความ */
+        font-size: 12px; /* ขนาดตัวอักษร */
+    }
+
+    /* จัดหัวตารางให้ดูเด่น */
+    th {
+        background-color: #f0f0f0; /* พื้นหลังสีเทาอ่อน */
+        font-weight: bold; /* ตัวหนา */
+    }
+
+    /* ซ่อนคอลัมน์จัดการ (ปุ่มลบ) */
+    th:last-child, td:last-child {
+        display: none !important;
+    }
+}
