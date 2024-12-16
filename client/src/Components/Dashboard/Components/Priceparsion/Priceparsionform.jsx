@@ -147,7 +147,7 @@ const Priceparisonform = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 space-y-4 p-0 lg:p-4 ">
-            <h2 className="text-center text-xl mb-4">ฟอร์มกรอกข้อมูลเปรียบเทียบราคา ERP</h2>
+            <h2 className="text-center text-xl mb-4">ฟอร์มกรอกข้อมูลเปรียบเทียบราคา</h2>
 
             {/* ฟอร์มกรอกข้อมูล */}
             <div className="border rounded-md shadow-lg p-4 bg-white">
