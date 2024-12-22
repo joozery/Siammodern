@@ -1,4 +1,5 @@
 import './App.css'
+import './Components/custom-table.css'
 import Dashboard from './Components/Dashboard/Dashboard'
 import Login from './Components/Login/Login'
 import Register from './Components/Register/Register'
@@ -8,7 +9,9 @@ import PurchasePage from './Components/Dashboard/Components/Purchase/Purchase.js
 import SuppierPage from './Components/Dashboard/Components/Suppier/Suppier.jsx';
 import ProductReceiptPage from './Components/Dashboard/Components/ProductReceipt/ProductReceipt.jsx';
 import RequisitionPage from './Components/Dashboard/Components/Requisition/Requisition.jsx';
+import PriceparsionHistoryPage from './Components/Dashboard/Components/PriceparsionHistory/PriceparsionHistory.jsx';
 import PriceparsionPage from './Components/Dashboard/Components/Priceparsion/Priceparsion.jsx';
+
 
 // Import React router dom
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -38,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: '/Receipt',
     element: <div><ProductReceiptPage/></div>
+  },
+  {
+    path: '/PriceparsionHistory',
+    element: <div><PriceparsionHistoryPage/></div>
   },
   {
     path: '/Suppier',

@@ -10,8 +10,9 @@ import StockData from '../Stock/StockData'
 import SuppierData from '../Suppier/SuppierData';
 import PurchaseData from '../Purchase/PurchaseData';
 import RequisitionData from '../Requisition/RequisitionData';
-import ReceivingPurchaseData from '../ReceivingPurchase/ReceivingPurchaseData';
 import Priceparsionform from '../Priceparsion/Priceparsionform';
+import ReceivingPurchaseData from '../ReceivingPurchase/ReceivingPurchaseData';
+import ReceivingPurchaseHistoryData from '../PriceparsionHistory/PriceparsionHistoryData';
 
 const Body = () => {
 
@@ -36,6 +37,7 @@ const Body = () => {
       {currentPath === '/Requisition' && <RequisitionData />}
       {currentPath === '/Receipt' && <ReceivingPurchaseData />}
       {currentPath === '/Priceparsion' && <Priceparsionform />}
+      {currentPath === '/PriceparsionHistory' && <ReceivingPurchaseHistoryData/>}
     </div>
   )
 }

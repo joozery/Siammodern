@@ -120,6 +120,15 @@ const Sidebar = () => {
             </Link>
           </li>
 
+          <li className="listItem">
+            <Link to="/PriceparsionHistory" className='menuLink flex'>
+                <FaFileInvoice className="icon"/>
+                <span className="smallText">
+                ประวัติเปรียบเทียบราคา
+                </span>
+            </Link>
+          </li>
+
         </ul>
       </div>
           
