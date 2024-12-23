@@ -6,7 +6,6 @@ import "./print.css";
 const Priceparisonform = () => {
     const [items, setItems] = useState([]);
     const [supplierHeaders, setSupplierHeaders] = useState(["ผู้จัดจำหน่าย 1", "ผู้จัดจำหน่าย 2", "ผู้จัดจำหน่าย 3"]);
-
     const [formInput, setFormInput] = useState({
         productName: "",
         suppliers: [
@@ -15,12 +14,23 @@ const Priceparisonform = () => {
             { seller: "", price: "", remark: "" },
         ],
         comment: "",
+        files: [], // ใช้ array เก็บไฟล์ที่แนบ
     });
     const [errors, setErrors] = useState({});
 
     const handleInputChange = (field, value) => {
         setFormInput({ ...formInput, [field]: value });
         if (errors[field]) setErrors({ ...errors, [field]: null });
+    };
+
+    const handleFileChange = (e) => {
+        const selectedFiles = Array.from(e.target.files); // รับไฟล์ที่เลือกทั้งหมด
+        setFormInput({ ...formInput, files: [...formInput.files, ...selectedFiles] }); // เพิ่มไฟล์ลงใน array
+    };
+
+    const handleRemoveFile = (index) => {
+        const updatedFiles = formInput.files.filter((_, i) => i !== index);
+        setFormInput({ ...formInput, files: updatedFiles });
     };
 
     const handleSupplierChange = (index, field, value) => {
@@ -60,6 +70,7 @@ const Priceparisonform = () => {
                 seller: "", price: "", remark: "",
             })),
             comment: "",
+            files: [], // รีเซ็ตไฟล์
         });
     };
 
@@ -74,6 +85,7 @@ const Priceparisonform = () => {
                 { seller: "", price: "", remark: "" },
             ],
             comment: "",
+            files: [],
         });
         setSupplierHeaders(["ผู้จัดจำหน่าย 1", "ผู้จัดจำหน่าย 2", "ผู้จัดจำหน่าย 3"]); // รีเซ็ตหัวตาราง
         setItems([]);
@@ -89,7 +101,6 @@ const Priceparisonform = () => {
 
             pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
             pdf.save("comparison_table.pdf");
-            
         });
     };
 
@@ -136,6 +147,29 @@ const Priceparisonform = () => {
                         />
                     </div>
                 ))}
+                <div className="mb-4">
+                    <label className="text-lg">แนบไฟล์เอกสารที่เกี่ยวข้อง:</label>
+                    <input
+                        type="file"
+                        multiple
+                        onChange={handleFileChange}
+                        className="border rounded p-2 w-full"
+                    />
+                    <ul className="mt-2">
+                        {formInput.files.map((file, index) => (
+                            <li key={index} className="flex items-center space-x-2">
+                                <span>{file.name}</span>
+                                <button
+                                    type="button"
+                                    className="text-red-500"
+                                    onClick={() => handleRemoveFile(index)}
+                                >
+                                    ลบ
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
                 <div className="flex space-x-4">
                     <button onClick={addItemToTable} className="bg-green-500 text-white px-4 py-2 rounded">เพิ่มรายการ</button>
                     <button onClick={resetForm} className="bg-red-500 text-white px-4 py-2 rounded">รีเซ็ตข้อมูล</button>
@@ -186,7 +220,6 @@ const Priceparisonform = () => {
             <div className="flex justify-end space-x-4 mt-4 no-print">
                 <button onClick={handlePrint} className="bg-blue-500 text-white px-4 py-2 rounded">พิมพ์เอกสาร </button>
                 <button onClick={generatePDF} className="bg-green-500 text-white px-4 py-2 rounded">ดาวน์โหลด PDF</button>
-                <button onClick={generatePDF} className="bg-gray-500 text-white px-4 py-2 rounded">บันทึกรายการ</button>
             </div>
         </div>
     );
