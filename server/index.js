@@ -429,3 +429,98 @@ app.delete("/products/:id", (req, res) => {
         res.status(200).json({ message: "Product deleted successfully" });
     });
 });
+
+// API สำหรับบันทึกฟอร์มเปรียบเทียบราคา
+app.post("/comparison/save", (req, res) => {
+    const {
+        bookNumber, // เลขที่หนังสือ
+        date, // วันที่
+        productName, // ชื่อสินค้า
+        suppliers, // รายชื่อผู้จัดจำหน่าย
+        comment, // หมายเหตุ
+        files, // ไฟล์ที่เกี่ยวข้อง
+    } = req.body;
+
+    // Validation
+    if (!bookNumber || !date || !productName) {
+        return res.status(400).json({ error: "กรุณากรอกข้อมูลที่จำเป็น (เลขที่หนังสือ, วันที่, ชื่อสินค้า)" });
+    }
+
+    // Insert comparison data
+    const comparisonSQL = `
+        INSERT INTO comparisons (book_number, date, product_name, comment)
+        VALUES (?, ?, ?, ?)
+    `;
+    db.query(comparisonSQL, [bookNumber, date, productName, comment], (err, result) => {
+        if (err) {
+            console.error("Error inserting comparison:", err);
+            return res.status(500).json({ error: "บันทึกฟอร์มเปรียบเทียบราคาล้มเหลว" });
+        }
+
+        const comparisonId = result.insertId;
+
+        // Insert suppliers
+        if (suppliers && suppliers.length > 0) {
+            const supplierSQL = `
+                INSERT INTO suppliers (comparison_id, seller, price, remark)
+                VALUES ?
+            `;
+            const supplierValues = suppliers.map((supplier) => [
+                comparisonId,
+                supplier.seller,
+                supplier.price,
+                supplier.remark,
+            ]);
+
+            db.query(supplierSQL, [supplierValues], (err) => {
+                if (err) {
+                    console.error("Error inserting suppliers:", err);
+                    return res.status(500).json({ error: "บันทึกข้อมูลผู้จัดจำหน่ายล้มเหลว" });
+                }
+            });
+        }
+
+        // Insert files
+        if (files && files.length > 0) {
+            const fileSQL = `
+                INSERT INTO files (comparison_id, file_name, file_url)
+                VALUES ?
+            `;
+            const fileValues = files.map((file) => [
+                comparisonId,
+                file.fileName,
+                file.fileUrl,
+            ]);
+
+            db.query(fileSQL, [fileValues], (err) => {
+                if (err) {
+                    console.error("Error inserting files:", err);
+                    return res.status(500).json({ error: "บันทึกไฟล์ล้มเหลว" });
+                }
+            });
+        }
+
+        res.status(201).json({ message: "บันทึกฟอร์มเปรียบเทียบราคาสำเร็จ" });
+    });
+});
+
+// API สำหรับดึงข้อมูลฟอร์มเปรียบเทียบราคา
+app.get("/comparison", (req, res) => {
+    const SQL = `
+        SELECT c.*, 
+               JSON_ARRAYAGG(JSON_OBJECT('seller', s.seller, 'price', s.price, 'remark', s.remark)) AS suppliers,
+               JSON_ARRAYAGG(JSON_OBJECT('fileName', f.file_name, 'fileUrl', f.file_url)) AS files
+        FROM comparisons c
+        LEFT JOIN suppliers s ON c.id = s.comparison_id
+        LEFT JOIN files f ON c.id = f.comparison_id
+        GROUP BY c.id
+    `;
+    db.query(SQL, (err, results) => {
+        if (err) {
+            console.error("Error fetching comparison data:", err);
+            return res.status(500).json({ error: "ดึงข้อมูลฟอร์มเปรียบเทียบราคาล้มเหลว" });
+        }
+
+        res.status(200).json(results);
+    });
+});
