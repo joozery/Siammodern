@@ -91,7 +91,7 @@ const Login = () => {
             <h3>ยินดีต้อนรับสู่ระบบ</h3>
           </div>
 
-          <form className="form grid dashboard" onSubmit={onSubmit}>
+          <form className="form grid" onSubmit={onSubmit}>
             <span className={statusHolder}>{loginStatus}</span>
 
             <div className="inputDiv">
