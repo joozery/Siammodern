@@ -22,7 +22,7 @@ const Activity = () => {
         </button>
        </div>
 
-       <div className="secContainer grid">
+       <div className="secContainer grid gap-5">
         <div className="singleCustomer flex">
           <img src={user1} alt="Customer Image" />
           <div className="customerDetails">

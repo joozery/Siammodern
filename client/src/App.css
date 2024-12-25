@@ -30,7 +30,7 @@
   align-items: center;
 }
 
-.grid {
+.grid.dashboard {
   display: grid;
   align-items: center;
   gap: 1.5rem;

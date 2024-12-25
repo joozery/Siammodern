@@ -71,7 +71,7 @@ const Register = () => {
 
           </div>
 
-          <form action="" className='form grid'>
+          <form action="" className='form grid dashboard'>
 
             <div className="inputDiv">
               <label htmlFor="email">Email</label>

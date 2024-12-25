@@ -26,7 +26,7 @@ import { Link } from 'react-router-dom'
 
 const Sidebar = () => {
   return (
-    <div className='sideBar grid'>
+    <div className='sideBar grid gap-4'>
 
       <div className="logoDiv flex">
         <img src={logo} alt="Image Name" />
@@ -36,7 +36,7 @@ const Sidebar = () => {
         <h3 className="divTitle font-bold"> 
           QUICK MENU
         </h3>
-        <ul className="menuLists grid">
+        <ul className="menuLists grid gap-4">
 
           <li className="listItem">
             <Link to="/dashboard" className='menuLink flex'>
@@ -138,7 +138,7 @@ const Sidebar = () => {
         <h3 className="divTitle font-bold">
           SETTINGS
         </h3>
-        <ul className="menuLists grid">
+        <ul className="menuLists grid gap-4">
 
           <li className="listItem">
             <a href="#" className='menuLink flex'>
