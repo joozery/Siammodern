@@ -1,13 +1,18 @@
 import React, { useState, useRef } from 'react';
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import "./print.css";
+// import "./print.css";
+import "./pricetable.css";
+
+import logoImgData from "../../../../assets/logosiam.png"
 
 const Priceparisonform = () => {
     const [items, setItems] = useState([]);
     const [isSellerDisabled, setIsSellerDisabled] = useState(false);
     const [supplierHeaders, setSupplierHeaders] = useState(["ผู้จัดจำหน่าย 1", "ผู้จัดจำหน่าย 2", "ผู้จัดจำหน่าย 3"]);
     const fileInputRefs = useRef([React.createRef(), React.createRef(), React.createRef()]);
+    const tableToPdfRef = useRef(null); // สร้าง ref เพื่อเก็บการอ้างอิงของเนื้อหาสำหรับ PDF
+
     const [formInput, setFormInput] = useState({
         productName: "",
         documentNo: "", // เลขที่หนังสือ
@@ -119,13 +124,16 @@ const Priceparisonform = () => {
         // console.log("check", formInput)
         // return
         setFormInput({
-            productName: "",
-            documentNo: "",
-            purchasingDate: "",
-            departmentHeadDate: "",
-            managerDate: "",
+            // productName: "",
+            // documentNo: "",
+            // purchasingDate: "",
+            // departmentHeadDate: "",
+            // managerDate: "",
             suppliers: formInput.suppliers.map(() => ({
-                seller: "", price: "", remark: "", files: [],
+                // seller: "",
+                price: "",
+                remark: "",
+                files: [],
             })),
             comment: "",
         });
@@ -173,14 +181,15 @@ const Priceparisonform = () => {
     };
 
     const generatePDF = () => {
-        const input = document.getElementById("table-to-pdf");
+        const input = tableToPdfRef.current; // อ้างอิงถึง DOM ของส่วนที่ต้องการ
+        // const input = document.getElementById("table-to-pdf");
         html2canvas(input, { scale: 2 }).then((canvas) => {
             const imgData = canvas.toDataURL("image/png");
             const pdf = new jsPDF("p", "mm", "a4");
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+            pdf.addImage(imgData, "PNG", 0, 10, pdfWidth, pdfHeight); // เพิ่มข้อมูลใน PDF
             pdf.save("comparison_table.pdf");
         });
     };
@@ -211,6 +220,7 @@ const Priceparisonform = () => {
                             <input
                                 type="date"
                                 value={formInput.managerDate}
+                                disabled={isSellerDisabled}
                                 onChange={(e) => handleInputChange("managerDate", e.target.value)}
                                 className={`border rounded p-2 w-full ${errors.managerDate ? "border-red-500" : "border-gray-300"}`}
                             />
@@ -280,6 +290,7 @@ const Priceparisonform = () => {
                             <input
                                 type="text"
                                 value={formInput.documentNo}
+                                disabled={isSellerDisabled}
                                 onChange={(e) => handleInputChange("documentNo", e.target.value)}
                                 className={`border rounded p-2 w-full ${errors.documentNo ? "border-red-500" : "border-gray-300"}`}
                             />
@@ -290,6 +301,7 @@ const Priceparisonform = () => {
                             <input
                                 type="date"
                                 value={formInput.purchasingDate}
+                                disabled={isSellerDisabled}
                                 onChange={(e) => handleInputChange("purchasingDate", e.target.value)}
                                 className={`border rounded p-2 w-full ${errors.purchasingDate ? "border-red-500" : "border-gray-300"}`}
                             />
@@ -300,6 +312,7 @@ const Priceparisonform = () => {
                             <input
                                 type="date"
                                 value={formInput.departmentHeadDate}
+                                disabled={isSellerDisabled}
                                 onChange={(e) => handleInputChange("departmentHeadDate", e.target.value)}
                                 className={`border rounded p-2 w-full ${errors.departmentHeadDate ? "border-red-500" : "border-gray-300"}`}
                             />
@@ -308,7 +321,7 @@ const Priceparisonform = () => {
                         <div className="mb-4">
                             <label className="text-lg">หมายเหตุ:</label>
                             <input
-                                type="date"
+                                type="text"
                                 value={formInput.comment}
                                 onChange={(e) => handleInputChange("comment", e.target.value)}
                                 className={`border rounded p-2 w-full ${errors.comment ? "border-red-500" : "border-gray-300"}`}
@@ -353,11 +366,11 @@ const Priceparisonform = () => {
                                     {item.suppliers.map((supplier, i) => (
                                         <td key={i} className="py-2 px-4 border">
                                             {/* {supplier.seller && `${supplier.seller} - ฿${supplier.price}`} */}
-                                            <div>
+                                            {/* <div>
                                                 <strong>ชื่อผู้จัดจำหน่าย:</strong> {supplier.seller || "N/A"}
-                                            </div>
+                                            </div> */}
                                             <div>
-                                                <strong>ราคา:</strong> {supplier.price ? `฿${supplier.price}` : "N/A"}
+                                                <strong>ราคา:</strong> {supplier.price ? `${supplier.price} บาท` : "N/A"}
                                             </div>
                                             <div>
                                                 <strong>หมายเหตุ:</strong> {supplier.remark || "ไม่มีหมายเหตุ"}
@@ -365,17 +378,19 @@ const Priceparisonform = () => {
                                             <div>
                                                 <strong>ไฟล์:</strong>{" "}
                                                 {supplier.files.length > 0
-                                                    ? supplier.files.map((file, index) => (
-                                                        <a
-                                                            key={index}
-                                                            href={URL.createObjectURL(file)}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="text-blue-500 underline"
-                                                        >
-                                                            {file.name}
-                                                        </a>
-                                                    ))
+                                                    ?
+                                                    // supplier.files.map((file, index) => (
+                                                    //     <a
+                                                    //         key={index}
+                                                    //         href={URL.createObjectURL(file)}
+                                                    //         target="_blank"
+                                                    //         rel="noopener noreferrer"
+                                                    //         className="text-blue-500 underline"
+                                                    //     >
+                                                    //         {file.name}
+                                                    //     </a>
+                                                    // ))
+                                                    "มีไฟล์"
                                                     : "ไม่มีไฟล์"}
                                             </div>
                                         </td>
@@ -387,10 +402,86 @@ const Priceparisonform = () => {
                         </tbody>
                     </table>
                 </div>
-                <div className="flex justify-end space-x-4 mt-4">
-                    <button onClick={generatePDF} className="bg-blue-500 text-white px-4 py-2 rounded">ดาวน์โหลด PDF</button>
-                    <button onClick={handlePrint} className="bg-gray-500 text-white px-4 py-2 rounded">พิมพ์</button>
+
+                {/* ฟอรฺม PDF  */}
+                <div ref={tableToPdfRef}  class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h1 class="text-lg font-bold">แบบฟอร์มการเปรียบเทียบราคาของ</h1>
+                            <p>ผู้จำหน่าย/ผู้รับจ้าง</p>
+                        </div>
+                        <div class="text-right">
+                            {items.map((item) => (
+                                <div key={item.id}>
+                                    <p class="font-bold">{item.documentNo}</p>
+                                    <p>{item.purchasingDate}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div class="">
+                        <table class="table-auto table-export-pdf w-full">
+                            <thead>
+                                <tr class="text-center font-bold">
+                                    <th class="p-2">
+                                        <p>ลำดับที่</p>
+                                        <p class="text-sm text-gray-600">Item No.</p>
+                                    </th>
+                                    <th class="p-2">
+                                        <p>รายการสินค้า</p>
+                                        <p class="text-sm text-gray-600">List Product</p>
+                                    </th>
+                                    <th class="p-2" colspan="3">
+                                        <p className="seller-field">ผู้จำหน่าย</p>
+                                        <div class="grid grid-cols-3 box-seller">
+                                            {supplierHeaders.map((header, index) => (
+                                                <div key={index} class="">{header}</div>
+                                            ))}
+                                        </div>
+                                    </th>
+                                    <th class="p-2">
+                                        <p>หมายเหตุ</p>
+                                        <p class="text-sm text-gray-600">Note</p>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {items.map((item, index) => (
+                                    <tr key={index} class="text-center">
+                                        <td class="p-2">{item.id}</td>
+                                        <td class="p-2">{item.productName}</td>
+                                        <td class="p-0" colspan="3">
+                                            <table class="info w-full">
+                                                <tbody>
+                                                    <tr class="grid grid-cols-3">
+                                                        {item.suppliers.map((supplier, i) => (
+                                                            <td
+                                                                key={i}
+                                                                class={`p-2 ${i === item.suppliers.length - 1 ? '' : ''}`}
+                                                            >
+                                                                <div><strong>ราคา:</strong> {supplier.price ? `${supplier.price} บาท` : "N/A"}</div>
+                                                                <div><strong>หมายเหตุ:</strong> {supplier.remark || "ไม่มีหมายเหตุ"}</div>
+                                                            </td>
+                                                        ))}
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                        <td class="p-2">{item.comment}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+                
+            </div>
+
+
+            <div className="flex justify-end space-x-4 mt-4">
+                <button onClick={generatePDF} className="bg-blue-500 text-white px-4 py-2 rounded">ดาวน์โหลด PDF</button>
+                <button onClick={handlePrint} className="bg-gray-500 text-white px-4 py-2 rounded">พิมพ์</button>
             </div>
         </div>
     );
