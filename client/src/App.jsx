@@ -11,6 +11,7 @@ import ProductReceiptPage from './Components/Dashboard/Components/ProductReceipt
 import RequisitionPage from './Components/Dashboard/Components/Requisition/Requisition.jsx';
 import PriceparsionHistoryPage from './Components/Dashboard/Components/PriceparsionHistory/PriceparsionHistory.jsx';
 import PriceparsionPage from './Components/Dashboard/Components/Priceparsion/Priceparsion.jsx';
+import SignApprovalPage from './Components/Dashboard/Components/ReceivingPurchase/SignApprovalPage';
 
 
 // Import React router dom
@@ -59,10 +60,10 @@ const router = createBrowserRouter([
     element: <div><UserManagement/></div>
   },
   {
-    path: '/Priceparsion',
-    element: <div><PriceparsionPage/></div>
+    path: '/sign/:id', // เพิ่มเส้นทางสำหรับ SignApprovalPage
+    element: <div><SignApprovalPage /></div>
   }
-])
+]);
 
 function App() {
   return (

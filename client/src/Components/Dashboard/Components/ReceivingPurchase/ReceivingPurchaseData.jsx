@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { IoPrint } from "react-icons/io5";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import { useNavigate } from "react-router-dom";
+
+
 
 const ReceivingPurchaseData = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -226,12 +229,31 @@ const ReceivingPurchaseData = () => {
                 <td className="border-b py-2 px-4 whitespace-nowrap">{item.count}</td>
                 <td className="border-b py-2 px-4 whitespace-nowrap">{item.unitType}</td>
                 <td className="border-b py-2 px-4 whitespace-nowrap">
-                  <span
-                    className={`font-medium ${item.status === "อนุมัติแล้ว" ? "text-green-500" : "text-yellow-500"
-                      }`}
-                  >
-                    {item.status}
-                  </span>
+                <select
+  className={`px-2 py-1 rounded-md border ${
+    item.status === "อนุมัติแล้ว"
+      ? "border-green-500 text-green-500"
+      : item.status === "ไม่อนุมัติ"
+      ? "border-red-500 text-red-500"
+      : "border-yellow-500 text-yellow-500"
+  }`}
+  defaultValue={item.status}
+  onChange={(e) => {
+    const updatedStatus = e.target.value;
+
+    // ตรวจสอบสถานะที่ถูกเลือก
+    if (updatedStatus === "อนุมัติแล้ว" || updatedStatus === "รอการอนุมัติ") {
+      // เปลี่ยนเส้นทางไปยังหน้าเซ็นอนุมัติ
+      window.location.href = `/sign/${item.id}`;
+    }
+
+    console.log(`สถานะใหม่ของ ID ${item.id}:`, updatedStatus);
+  }}
+>
+  <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
+  <option value="รอการอนุมัติ">รอการอนุมัติ</option>
+  <option value="ไม่อนุมัติ">ไม่อนุมัติ</option>
+</select>
                 </td>
               </tr>
             ))}

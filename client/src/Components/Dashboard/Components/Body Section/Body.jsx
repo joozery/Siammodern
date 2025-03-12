@@ -13,6 +13,8 @@ import RequisitionData from '../Requisition/RequisitionData';
 import Priceparsionform from '../Priceparsion/Priceparsionform';
 import ReceivingPurchaseData from '../ReceivingPurchase/ReceivingPurchaseData';
 import ReceivingPurchaseHistoryData from '../PriceparsionHistory/PriceparsionHistoryData';
+import SignApprovalPage from '../ReceivingPurchase/SignApprovalPage'; // นำเข้า SignApprovalPage
+
 
 const Body = () => {
 
@@ -38,6 +40,7 @@ const Body = () => {
       {currentPath === '/Receipt' && <ReceivingPurchaseData />}
       {currentPath === '/Priceparsion' && <Priceparsionform />}
       {currentPath === '/PriceparsionHistory' && <ReceivingPurchaseHistoryData/>}
+      {currentPath.startsWith('/sign') && <SignApprovalPage id={id} />}
     </div>
   )
 }

@@ -112,6 +112,15 @@ const Sidebar = () => {
           </li>
 
           <li className="listItem">
+            <Link to="/Receipt" className='menuLink flex'>
+                <FaFileInvoice className="icon"/>
+                <span className="smallText">
+                  รายการคำขออนุมัติ
+                </span>
+            </Link>
+          </li>
+
+          <li className="listItem">
             <Link to="/Priceparsion" className='menuLink flex'>
                 <FaFileInvoice className="icon"/>
                 <span className="smallText">
