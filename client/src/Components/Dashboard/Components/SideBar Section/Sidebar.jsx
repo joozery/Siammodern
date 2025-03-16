@@ -94,12 +94,12 @@ const Sidebar = () => {
           </li>
           
           <li className="listItem">
-            <a href="#" className='menuLink flex'>
-                <AiOutlineFileDone className="icon"/>
-                <span className="smallText">
-                  สรุปรายการ
-                </span>
-            </a>
+          <Link to="/summary" className="menuLink flex">
+    <AiOutlineFileDone className="icon"/>
+    <span className="smallText">
+      สรุปรายการ
+    </span>
+  </Link>
           </li>
           
           <li className="listItem">
@@ -178,13 +178,18 @@ const Sidebar = () => {
 
 
           <li className="listItem logOutBtn">
-            <a href="/" className='menuLink flex'>
-                <BsFillArrowLeftCircleFill className="icon"/>
-                <span className="smallText">
-                  ออกจากระบบ
-                </span>
-            </a>
-          </li>
+  <button 
+    onClick={() => {
+      localStorage.removeItem("token"); // ลบ token
+      localStorage.removeItem("user");  // ลบข้อมูลผู้ใช้
+      window.location.href = "/";       // Redirect ไปหน้า Login
+    }} 
+    className="menuLink flex w-full text-left"
+  >
+    <BsFillArrowLeftCircleFill className="icon"/>
+    <span className="smallText">ออกจากระบบ</span>
+  </button>
+</li>
 
         </ul>
       </div>

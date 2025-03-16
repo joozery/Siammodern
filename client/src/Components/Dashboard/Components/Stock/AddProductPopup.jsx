@@ -46,7 +46,7 @@ const AddProductPopup = ({ onClose }) => {
   const handleSubmit = async () => {
     const formDataToSend = new FormData();
 
-    // Append form data
+    // ✅ Append ข้อมูลสินค้า
     formDataToSend.append("category", formData.category || "");
     formDataToSend.append("sku", formData.sku || "");
     formDataToSend.append("productName", formData.productName || "");
@@ -63,33 +63,29 @@ const AddProductPopup = ({ onClose }) => {
     formDataToSend.append("expirationDate", formData.expirationDate || null);
     formDataToSend.append("status", formData.status || "");
 
-    // Append image if exists
+    // ✅ Append รูปภาพถ้ามี
     if (formData.image) {
-      formDataToSend.append("image", formData.image);
+        formDataToSend.append("image", formData.image);
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3002/products", // Updated backend route
-        formDataToSend,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+        const response = await axios.post(
+            "https://servsiam-backend-a61de3db6766.herokuapp.com/api/products/add", // ✅ URL ใหม่
+            formDataToSend,
+            { headers: { "Content-Type": "multipart/form-data" } }
+        );
 
-      if (response.status === 201) {
-        alert("เพิ่มสินค้าสำเร็จ!"); // Product added successfully
-        onClose();
-      } else {
-        alert("เกิดข้อผิดพลาดในการเพิ่มสินค้า.");
-      }
+        if (response.status === 201) {
+            alert("✅ เพิ่มสินค้าสำเร็จ!");
+            onClose(); // ปิด Popup
+        } else {
+            alert("❌ เกิดข้อผิดพลาดในการเพิ่มสินค้า");
+        }
     } catch (error) {
-      console.error("Error submitting the form:", error);
-      alert("Failed to add product.");
+        console.error("❌ Error submitting the form:", error);
+        alert("❌ Failed to add product.");
     }
-  };
+};
 
   return (
     <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">

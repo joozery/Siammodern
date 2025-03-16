@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FiSearch } from "react-icons/fi";
 import { RiDeleteBin5Line } from "react-icons/ri";
+import ReactLoading from "react-loading"; // ✅ เพิ่ม React Loading
 import AddProductPopup from "./AddProductPopup";
 import ProductDetailPopup from "./ProductDetailPopup";
 import "./StockData.css";
@@ -21,17 +22,21 @@ export default function Stock() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // ดึงข้อมูลสินค้าจาก API
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get("http://localhost:3002/products");
-        setProducts(response.data.data); // สมมติว่าข้อมูลอยู่ใน response.data.data
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-    fetchProducts();
-  }, []);
+  // ดึงข้อมูลสินค้าจาก API
+useEffect(() => {
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get("https://servsiam-backend-a61de3db6766.herokuapp.com/api/products");
+      setProducts(response.data.products); // ✅ ใช้ `response.data.products` ตามโครงสร้าง JSON ของ API
+    } catch (error) {
+      console.error("❌ Error fetching products:", error);
+    }
+    setLoading(false); // ✅ โหลดเสร็จแล้ว
+  };
+
+  fetchProducts();
+}, []);
+
 
   // ฟังก์ชันกรองข้อมูลสินค้า
   const filteredData = products.filter((item) => {

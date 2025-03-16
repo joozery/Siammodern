@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Login.css";
 import "../../App.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,125 +11,140 @@ import logo from "../../LoginAssets/logopalm.png";
 // Imported Icons
 import { FaUserShield } from "react-icons/fa";
 import { BsFillShieldLockFill } from "react-icons/bs";
-import { AiOutlineSwapRight } from "react-icons/ai";
+
+const API_BASE_URL = "https://servsiam-backend-a61de3db6766.herokuapp.com/api/auth/login";
 
 const Login = () => {
   const [loginUserName, setLoginUserName] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginStatus, setLoginStatus] = useState("");
   const [statusHolder, setStatusHolder] = useState("message");
+  const [loading, setLoading] = useState(false); // ✅ เพิ่ม loading state
   const navigateTo = useNavigate();
 
-  // Handle login request
+  // ✅ Handle login request
   const loginUser = async (e) => {
     e.preventDefault();
 
     // Validate inputs
     if (!loginUserName || !loginPassword) {
-      setLoginStatus("Please fill out all fields");
+      setLoginStatus("⚠️ โปรดกรอกข้อมูลให้ครบถ้วน");
       setStatusHolder("showMessage");
       setTimeout(() => setStatusHolder("message"), 4000);
       return;
     }
 
+    setLoading(true); // ✅ แสดงสถานะ loading
+
     try {
-      const response = await Axios.post("http://localhost:3002/login", {
-        user_name: loginUserName,
-        password: loginPassword,
-      });
+      const response = await Axios.post(
+        API_BASE_URL,
+        {
+          user_name: loginUserName,
+          password: loginPassword,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      console.log("Response from server:", response.data);
+      console.log("📌 API Response:", response.data);
 
-      if (response.data.error) {
-        // If server returns an error
-        setLoginStatus(response.data.error);
+      if (response.data.success) {
+        // ✅ เก็บ Token และข้อมูลผู้ใช้
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        setLoginStatus("✅ เข้าสู่ระบบสำเร็จ! กำลังเปลี่ยนหน้า...");
         setStatusHolder("showMessage");
-      } else if (response.data.message) {
-        // If server sends success message
-        setLoginStatus(response.data.message);
-        setStatusHolder("showMessage");
+
+        // Redirect ไปหน้า Dashboard
         setTimeout(() => {
-          navigateTo("/dashboard"); // Redirect to dashboard
-        }, 2000); // Wait for 2 seconds before redirect
+          navigateTo("/dashboard");
+        }, 2000);
+      } else {
+        setLoginStatus("❌ " + (response.data.message || "เกิดข้อผิดพลาด"));
+        setStatusHolder("showMessage");
       }
     } catch (error) {
-      console.error("Error during login:", error);
-      setLoginStatus("An error occurred. Please try again.");
+      console.error("❌ Login Error:", error);
+      setLoginStatus(
+        "⚠️ " + (error.response?.data?.message || "เกิดข้อผิดพลาด โปรดลองใหม่")
+      );
       setStatusHolder("showMessage");
     }
 
-    // Hide the message after 4 seconds
+    setLoading(false); // ✅ ปิดสถานะ loading
     setTimeout(() => setStatusHolder("message"), 4000);
-  };
-
-  // Clear form after successful login
-  const onSubmit = () => {
-    setLoginUserName("");
-    setLoginPassword("");
   };
 
   return (
     <div className="loginPage flex">
       <div className="container flex">
+        {/* ✅ Video Section */}
         <div className="videoDiv">
-          <video src={video} autoPlay muted loop></video>
+          <video src={video} autoPlay muted loop className="rounded-lg shadow-md"></video>
           <div className="textDiv">
             <h2 className="title">SIAM MODERN PALM COMPANY LIMITED</h2>
             <p>บริษัท สยามโมเดิร์นปาล์ม จำกัด</p>
           </div>
-          <div className="footerDiv flex">
-            <span className="text">หากคุณยังไม่มีบัญชีใช้งาน ?</span>
-            <Link to={"/register"}>
-              <button className="btn">ติดต่อผู้ดูแลระบบ</button>
-            </Link>
-          </div>
         </div>
 
+        {/* ✅ Form Section */}
         <div className="formDiv flex">
           <div className="headerDiv">
-            <img src={logo} alt="Logo" />
-            <h3>ยินดีต้อนรับสู่ระบบ</h3>
+            <img src={logo} alt="Logo" className="w-20 mx-auto mb-2" />
+            <h3 className="text-xl font-semibold">ยินดีต้อนรับสู่ระบบ</h3>
           </div>
 
-          <form className="form grid" onSubmit={onSubmit}>
-            <span className={statusHolder}>{loginStatus}</span>
+          <form className="form grid gap-4" onSubmit={loginUser}>
+            <span className={`${statusHolder} text-red-500 text-sm`}>{loginStatus}</span>
 
             <div className="inputDiv">
-              <label htmlFor="username">Username</label>
-              <div className="input flex">
-                <FaUserShield className="icon" />
+              <label htmlFor="username" className="font-medium">Username</label>
+              <div className="input flex items-center border rounded-md p-2">
+                <FaUserShield className="text-gray-500 mr-2" />
                 <input
                   type="text"
                   id="username"
                   placeholder="Enter Username"
                   value={loginUserName}
                   onChange={(e) => setLoginUserName(e.target.value)}
+                  className="w-full bg-transparent outline-none"
                 />
               </div>
             </div>
 
             <div className="inputDiv">
-              <label htmlFor="password">Password</label>
-              <div className="input flex">
-                <BsFillShieldLockFill className="icon" />
+              <label htmlFor="password" className="font-medium">Password</label>
+              <div className="input flex items-center border rounded-md p-2">
+                <BsFillShieldLockFill className="text-gray-500 mr-2" />
                 <input
                   type="password"
                   id="password"
                   placeholder="Enter Password"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
+                  className="w-full bg-transparent outline-none"
                 />
               </div>
             </div>
 
-            <button type="submit" className="btn flex" onClick={loginUser}>
-              <span>เข้าสู่ระบบ</span>
-              <AiOutlineSwapRight className="icon" />
+            {/* ✅ Login Button */}
+            <button
+              type="submit"
+              className="btn flex items-center justify-center bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
+              disabled={loading} // ✅ ป้องกันการกดซ้ำ
+            >
+              {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
             </button>
 
-            <span className="forgotPassword">
-              Forgot your password? <a href="">Click Here</a>
-              <p>by woo you creative</p>
+            {/* ✅ Forgot Password */}
+            <span className="forgotPassword text-sm text-gray-500">
+              Forgot your password? <Link to="/reset-password" className="text-blue-500">Click Here</Link>
+              <p className="text-xs text-gray-400 mt-2">by woo you creative</p>
             </span>
           </form>
         </div>

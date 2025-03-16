@@ -1,67 +1,53 @@
 import React, { useState, useEffect } from "react";
-import { FaCog } from "react-icons/fa"; // Import icon ฟันเฟือง
+import { FaCog } from "react-icons/fa";
 import CreateUserPopup from "./CreateUserPopup";
-import './ContentUserManagement.css';
+import ReactLoading from "react-loading"; // ✅ ใช้ react-loading
+import "./ContentUserManagement.css";
 
 function ContentUserManagement() {
     const [users, setUsers] = useState([]);
-    const [roles, setRoles] = useState(""); // ตัวกรอง Roles
-    const [searchQuery, setSearchQuery] = useState(""); // ตัวกรอง Search
+    const [roles, setRoles] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const itemsPerPage = 10;
+    const API_BASE_URL = "https://servsiam-backend-a61de3db6766.herokuapp.com/api/auth";
 
-    // Fetch users from the backend
+    // ✅ ดึงข้อมูลผู้ใช้จาก Backend
     const fetchUsers = async (page = 1, roleFilter = "", search = "") => {
+        setLoading(true);
         try {
             const response = await fetch(
-                `http://localhost:3002/users?page=${page}&limit=${itemsPerPage}&role=${roleFilter}&search=${search}`
+                `${API_BASE_URL}/users?page=${page}&limit=${itemsPerPage}&role=${roleFilter}&search=${search}`
             );
             const data = await response.json();
-            if (data.data && Array.isArray(data.data)) {
-                setUsers(data.data);
+
+            console.log("📌 API Response:", data);
+
+            if (data.success && Array.isArray(data.users)) {
+                setUsers(data.users);
                 setTotalPages(data.totalPages);
             } else {
                 console.error("Unexpected response format:", data);
+                setUsers([]);
             }
         } catch (error) {
             console.error("Error fetching users:", error);
+            setUsers([]);
         }
+        setLoading(false);
     };
 
     useEffect(() => {
         fetchUsers(currentPage, roles, searchQuery);
     }, [currentPage, roles, searchQuery]);
 
+    // ✅ เปิด/ปิด Popup
     const openPopup = () => setIsPopupOpen(true);
     const closePopup = () => setIsPopupOpen(false);
-
-    const handleSaveUser = async (userData) => {
-        try {
-            const response = await fetch("http://localhost:3002/register", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(userData),
-            });
-            if (response.ok) {
-                console.log("User saved successfully");
-                fetchUsers(currentPage, roles, searchQuery);
-            } else {
-                console.error("Failed to save user");
-            }
-        } catch (error) {
-            console.error("Error saving user:", error);
-        }
-        closePopup();
-    };
-
-    const changePage = (newPage) => {
-        if (newPage > 0 && newPage <= totalPages) {
-            setCurrentPage(newPage);
-        }
-    };
 
     return (
         <>
@@ -79,11 +65,7 @@ function ContentUserManagement() {
 
             <div className="bg-white shadow-md rounded-lg p-4">
                 <div className="flex flex-wrap justify-between items-center mb-4">
-                    <select
-                        className="border p-2 rounded"
-                        value={roles}
-                        onChange={(e) => setRoles(e.target.value)}
-                    >
+                    <select className="border p-2 rounded" value={roles} onChange={(e) => setRoles(e.target.value)}>
                         <option value="">All Roles</option>
                         <option value="Admin">Admin</option>
                         <option value="User">User</option>
@@ -104,16 +86,20 @@ function ContentUserManagement() {
                                 <th className="py-2 px-2 text-left">Actions</th>
                                 <th className="py-2 px-2 text-left">Profile</th>
                                 <th className="py-2 px-2 text-left">User name</th>
-                                <th className="py-2 px-2 text-left">Name</th>
                                 <th className="py-2 px-2 text-left">Surname</th>
                                 <th className="py-2 px-2 text-left">Job Position</th>
                                 <th className="py-2 px-2 text-left">Email address</th>
-                                <th className="py-2 px-2 text-left">Creation time</th>
-                                <th className="py-2 px-2 text-left">Active</th>
+                                <th className="py-2 px-2 text-left">Active</th> {/* ✅ ลบ Creation Time ออก */}
                             </tr>
                         </thead>
                         <tbody>
-                            {users.length > 0 ? (
+                            {loading ? (
+                                <tr>
+                                    <td colSpan="7" className="text-center py-4">
+                                        <ReactLoading type="spin" color="#4CAF50" height={40} width={40} />
+                                    </td>
+                                </tr>
+                            ) : users.length > 0 ? (
                                 users.map((user) => (
                                     <tr key={user.id} className="border-t hover:bg-gray-100">
                                         <td className="py-2 px-2">
@@ -123,61 +109,33 @@ function ContentUserManagement() {
                                         </td>
                                         <td className="py-2 px-2">
                                             <img
-                                                src={user.profile_image || "/default-profile.png"}
+                                                src={user.profile_picture || "/default-profile.png"}
                                                 alt="Profile"
                                                 className="w-10 h-10 rounded-full border"
                                             />
                                         </td>
                                         <td className="py-2 px-2">{user.user_name}</td>
-                                        <td className="py-2 px-2">{user.name}</td>
-                                        <td className="py-2 px-2">{user.surname}</td>
-                                        <td className="py-2 px-2">{user.job_position}</td>
+                                        <td className="py-2 px-2">{user.surname || "-"}</td>
+                                        <td className="py-2 px-2">{user.job_position || "-"}</td>
                                         <td className="py-2 px-2">{user.email_address}</td>
-                                        <td className="py-2 px-2">{user.created_at}</td>
                                         <td className="py-2 px-2">
-                                            {user.active ? (
-                                                <span className="text-green-700 font-bold">กำลังใช้งาน</span>
-                                            ) : (
-                                                <span className="text-gray-500 font-bold">ไม่ใช้งาน</span>
-                                            )}
+                                            {user.active ? "✅ Active" : "❌ Inactive"}
                                         </td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="9" className="text-center py-4">
-                                        No users found
+                                    <td colSpan="7" className="text-center py-4">
+                                        ❌ No users found
                                     </td>
                                 </tr>
                             )}
                         </tbody>
                     </table>
                 </div>
-
-                <div className="flex justify-between mt-4">
-                    <button
-                        onClick={() => changePage(currentPage - 1)}
-                        disabled={currentPage === 1}
-                        className="bg-gray-500 text-white py-1 px-3 rounded hover:bg-gray-600 disabled:opacity-50"
-                    >
-                        Previous
-                    </button>
-                    <span>
-                        Page {currentPage} of {totalPages}
-                    </span>
-                    <button
-                        onClick={() => changePage(currentPage + 1)}
-                        disabled={currentPage === totalPages}
-                        className="bg-gray-500 text-white py-1 px-3 rounded hover:bg-gray-600 disabled:opacity-50"
-                    >
-                        Next
-                    </button>
-                </div>
             </div>
 
-            {isPopupOpen && (
-                <CreateUserPopup onClose={closePopup} onSave={handleSaveUser} />
-            )}
+            {isPopupOpen && <CreateUserPopup onClose={closePopup} />}
         </>
     );
 }
