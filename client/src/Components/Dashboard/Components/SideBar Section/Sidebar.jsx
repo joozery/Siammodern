@@ -9,7 +9,7 @@ import {IoMdSpeedometer} from 'react-icons/io'
 import {MdDeliveryDining} from 'react-icons/md'
 import {MdOutlineExplore} from 'react-icons/md'
 import {BsTrophy} from 'react-icons/bs'
-import { FaWarehouse } from 'react-icons/fa'; // คลังสินค้า
+import { FaWarehouse,FaShieldAlt } from 'react-icons/fa'; // คลังสินค้า
 import {AiOutlinePieChart} from 'react-icons/ai'
 import { FaTruck } from 'react-icons/fa';
 import { FaUsers } from 'react-icons/fa';
@@ -53,6 +53,13 @@ const Sidebar = () => {
                 <span className="smallText">
                   คลังสินค้า
                 </span>
+            </Link>
+          </li>
+
+          <li className="listItem">
+            <Link to="/SafetyStock" className='menuLink flex'> 
+              <FaShieldAlt className="icon" />
+              <span className="smallText">Safety Stock</span>
             </Link>
           </li>
           
