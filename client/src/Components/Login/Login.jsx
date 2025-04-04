@@ -6,7 +6,7 @@ import Axios from "axios";
 
 // Import assets
 import video from "../../LoginAssets/palm.mp4";
-import logo from "../../LoginAssets/logopalm.png";
+import logo from "../../LoginAssets/coverlogo.png";
 
 // Imported Icons
 import { FaUserShield } from "react-icons/fa";

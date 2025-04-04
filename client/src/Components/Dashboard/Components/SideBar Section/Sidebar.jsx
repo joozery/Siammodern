@@ -2,7 +2,7 @@ import React from 'react'
 import './sidebar.css'
 
 // Imported Images ==========>
-import logo from '../../Assets/logopalm.png'
+import logo from '../../Assets/coverlogo.png'
 
 // imported Icons ===========>
 import {IoMdSpeedometer} from 'react-icons/io'
@@ -152,36 +152,10 @@ const Sidebar = () => {
 
       <div className="settingsDiv">
         <h3 className="divTitle font-bold">
-          SETTINGS
         </h3>
         <ul className="menuLists grid gap-4">
-
-          <li className="listItem">
-            <a href="#" className='menuLink flex'>
-                <AiOutlinePieChart className="icon"/>
-                <span className="smallText">
-                  Charts
-                </span>
-            </a>
-          </li>
-
-          <li className="listItem">
-            <a href="#" className='menuLink flex'>
-                <BiTrendingUp className="icon"/>
-                <span className="smallText">
-                  Trends
-                </span>
-            </a>
-          </li>
           
-          <li className="listItem">
-            <a href="#" className='menuLink flex'>
-                <MdOutlinePermContactCalendar className="icon"/>
-                <span className="smallText">
-                  Contact
-                </span>
-            </a>
-          </li>
+        
 
 
           <li className="listItem logOutBtn">
