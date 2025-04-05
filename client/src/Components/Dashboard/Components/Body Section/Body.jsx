@@ -15,6 +15,7 @@ import ReceivingPurchaseHistoryData from '../PriceparsionHistory/PriceparsionHis
 import SignApprovalPage from '../ReceivingPurchase/SignApprovalPage';
 import SummaryContent from '../SummaryPage/SummaryContent'; // ✅ นำเข้า SummaryPage
 import SafetyStock from '../SafetyStock/SafetyStock';
+import PriceparsionformEdit from '../PriceparsionEdit/PriceparsionformEdit';
 
 const Body = () => {
   const location = useLocation();
@@ -43,6 +44,7 @@ const Body = () => {
       {currentPath === '/Requisition' && <RequisitionData />}
       {currentPath === '/Receipt' && <ReceivingPurchaseData />}
       {currentPath === '/Priceparsion' && <Priceparsionform />}
+      {currentPath === '/PriceparsionEdit' && <PriceparsionformEdit />}
       {currentPath === '/PriceparsionHistory' && <ReceivingPurchaseHistoryData />}
       {currentPath === '/summary' && <SummaryContent />} {/* ✅ เพิ่มหน้า Summary */}
       {currentPath === '/SafetyStock' && <SafetyStock />} 

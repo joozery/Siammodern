@@ -14,6 +14,7 @@ import SignApprovalPage from "./Components/Dashboard/Components/ReceivingPurchas
 import SummaryPage from "./Components/Dashboard/Components/SummaryPage/SummaryPage"; // ✅ Import หน้า Summary
 import PrivateRoute from "./Components/PrivateRoute"; // ✅ เพิ่ม import 
 import SafetyStockPage from "./Components/Dashboard/Components/SafetyStock/SafetyStockPage";
+import PriceparsionEditPage from "./Components/Dashboard/Components/PriceparsionEdit/PriceparsionEdit.jsx";
 
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
@@ -45,6 +46,7 @@ function App() {
         <Route path="/UserManagement" element={<ProtectedRoute element={<UserManagement />} />} />
         <Route path="/sign/:id" element={<ProtectedRoute element={<SignApprovalPage />} />} />
         <Route path="/Priceparsion" element={<ProtectedRoute element={<PriceparsionPage />} />} />
+        <Route path="/PriceparsionEdit" element={<ProtectedRoute element={<PriceparsionEditPage />} />} />
         <Route path="/SafetyStock" element={<ProtectedRoute element={<SafetyStockPage />} />} />
         <Route path="/summary" element={<PrivateRoute element={<SummaryPage />} />} /> {/* ✅ เพิ่มหน้า Summary */}
 

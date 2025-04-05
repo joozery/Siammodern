@@ -1,0 +1,33 @@
+table.table-export-pdf thead th {
+    border: 1px solid black;
+    padding: 0;
+}
+
+.seller-field {
+    padding: 10px;
+}
+
+.box-seller {
+    border-top: 1px solid black;
+    /* padding: 10px; */
+}
+
+.box-seller div {
+    padding: 10px;
+}
+
+.box-seller div:nth-child(n+2){
+    border-left: 1px solid black;
+}
+
+table.table-export-pdf tbody tr>td {
+    border: 1px solid black;
+}
+
+table.table-export-pdf .info tbody tr td {
+    border: 0;
+}
+
+table.table-export-pdf .info tbody tr td:nth-child(n+2) {
+    border-left: 1px solid black;
+}
