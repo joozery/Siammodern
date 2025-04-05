@@ -80,9 +80,9 @@ const ReceivingPurchaseHistoryData = () => {
             {currentPageData.map((item, index) => (
               <tr key={item.id}>
                 <td>{startIndex + index + 1}</td>
-                <td>{item.created_at?.slice(0, 10)}</td>
+                <td>{item.createdAt}</td>
                 <td>{item.documentNo}</td>
-                <td>{item.updated_at?.slice(0, 10)}</td>
+                <td>-</td>
                 <td></td>
                 {/* <td>{item.purchasingDate?.slice(0, 10)}</td>
                 <td>{item.managerDate?.slice(0, 10)}</td>

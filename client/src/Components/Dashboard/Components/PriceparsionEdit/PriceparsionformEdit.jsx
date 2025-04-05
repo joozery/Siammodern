@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import Swal from "sweetalert2";
 // import "./print.css";
 import "./pricetable.css";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -329,8 +330,14 @@ const PriceparisonformEdit = () => {
       (_, index) => !formInput[`files${index + 1}`]?.length
     );
 
+    console.log("Missing file index:", missingIndex); // Log missing file index
+
     if (missingIndex !== -1) {
-      alert(`กรุณาอัพโหลดไฟล์สำหรับผู้จัดจำหน่าย ${missingIndex + 1}`);
+      Swal.fire({
+        icon: "warning",
+        title: `กรุณาอัพโหลดไฟล์สำหรับผู้จัดจำหน่าย ${missingIndex + 1}`,
+        confirmButtonText: "ตกลง",
+      });
       return;
     }
 
@@ -344,16 +351,30 @@ const PriceparisonformEdit = () => {
     formData.append("managerDate", items.managerDate);
     formData.append("comment", items.comment);
 
-    // ✅ ไฟล์แนบ
-    if (items.files1?.length) formData.append("files1", items.files1[0]);
-    if (items.files2?.length) formData.append("files2", items.files2[0]);
-    if (items.files3?.length) formData.append("files3", items.files3[0]);
+    // Log formData details before appending files
+    console.log("Form data before appending files:", formData);
+
+    // ✅ ตรวจว่าเป็น File จริงๆ ไม่ใช่ URL (string)
+    if (items.files1?.length && items.files1[0] instanceof File) {
+      formData.append("files1", items.files1[0]);
+      console.log("✅ อัพโหลดไฟล์ใหม่ files1:", items.files1[0]);
+    }
+    if (items.files2?.length && items.files2[0] instanceof File) {
+      formData.append("files2", items.files2[0]);
+      console.log("✅ อัพโหลดไฟล์ใหม่ files2:", items.files2[0]);
+    }
+    if (items.files3?.length && items.files3[0] instanceof File) {
+      formData.append("files3", items.files3[0]);
+      console.log("✅ อัพโหลดไฟล์ใหม่ files3:", items.files3[0]);
+    }
 
     // ✅ Suppliers เป็น JSON string
     formData.append("suppliers", JSON.stringify(items.suppliers));
+    console.log("Suppliers data added:", items.suppliers); // Log suppliers data
 
     setloadingsend(true);
     try {
+      console.log("Sending data to backend...");
       const res = await fetch(
         `https://servsiam-backend-a61de3db6766.herokuapp.com/api/compare_prices/edit/${id}`,
         {
@@ -368,11 +389,22 @@ const PriceparisonformEdit = () => {
 
       const result = await res.json();
       console.log("✅ อัปเดตข้อมูลสำเร็จ:", result);
-      alert("อัปเดตเรียบร้อยแล้ว");
-      navigate('/PriceparsionHistory');
+      // ✅ แสดง SweetAlert แล้ว redirect
+      Swal.fire({
+        icon: "success",
+        title: "อัปเดตข้อมูลเรียบร้อยแล้ว",
+        confirmButtonText: "ตกลง",
+      }).then(() => {
+        navigate("/PriceparsionHistory");
+      });
     } catch (error) {
       console.error("❌ เกิดข้อผิดพลาดในการอัปเดต:", error);
-      alert("เกิดข้อผิดพลาดในการอัปเดตข้อมูล");
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถอัปเดตข้อมูลได้",
+        confirmButtonText: "ตกลง",
+      });
     } finally {
       setloadingsend(false);
     }

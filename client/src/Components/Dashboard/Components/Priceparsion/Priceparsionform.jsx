@@ -1,13 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import Swal from "sweetalert2";
 // import "./print.css";
 import "./pricetable.css";
+import { useNavigate } from "react-router-dom";
 const Priceparisonform = () => {
   const formRef = useRef(null);
-
+  const navigate = useNavigate();
   const [items, setItems] = useState({
     documentNo: "",
+    department: "",
     purchasingDate: "",
     departmentHeadDate: "",
     managerDate: "",
@@ -33,6 +36,7 @@ const Priceparisonform = () => {
 
   const [formInput, setFormInput] = useState({
     productName: "",
+    department: "",
     documentNo: "",
     purchasingDate: "",
     departmentHeadDate: "",
@@ -165,7 +169,11 @@ const Priceparisonform = () => {
       (_, index) => !formInput[`files${index + 1}`]?.length
     );
     if (missingIndex !== -1) {
-      alert(`กรุณาอัพโหลดไฟล์สำหรับผู้จัดจำหน่าย ${missingIndex + 1}`);
+      Swal.fire({
+        icon: "warning",
+        title: `กรุณาอัพโหลดไฟล์สำหรับผู้จัดจำหน่าย ${missingIndex + 1}`,
+        confirmButtonText: "ตกลง",
+      });
       return;
     }
 
@@ -198,6 +206,7 @@ const Priceparisonform = () => {
       setItems((prev) => ({
         ...prev,
         documentNo: formInput.documentNo,
+        department: formInput.department,
         purchasingDate: formInput.purchasingDate,
         departmentHeadDate: formInput.departmentHeadDate,
         managerDate: formInput.managerDate,
@@ -252,6 +261,7 @@ const Priceparisonform = () => {
 
     setFormInput({
       productName: "",
+      department: "",
       documentNo: "",
       purchasingDate: "",
       departmentHeadDate: "",
@@ -269,6 +279,7 @@ const Priceparisonform = () => {
 
     setItems({
       documentNo: "",
+      department: "",
       purchasingDate: "",
       departmentHeadDate: "",
       managerDate: "",
@@ -318,42 +329,56 @@ const Priceparisonform = () => {
     return formattedDate === "NaN/NaN/NaN" ? "-" : formattedDate;
   };
 
-  const SendData = () => {
-    console.log(items);
-  };
-
+  const [loadingsend, setloadingsend] = useState(false);
   const sendDataToBackend = async () => {
     const formData = new FormData();
-  
+
     // ✅ ข้อมูลธรรมดา
     formData.append("documentNo", items.documentNo);
+    formData.append("department", items.department);
     formData.append("purchasingDate", items.purchasingDate);
     formData.append("departmentHeadDate", items.departmentHeadDate);
     formData.append("managerDate", items.managerDate);
     formData.append("comment", items.comment);
-  
+
     // ✅ ไฟล์แนบ (แนบแบบ field ชัดเจน)
     if (items.files1?.length) formData.append("files1", items.files1[0]);
     if (items.files2?.length) formData.append("files2", items.files2[0]);
     if (items.files3?.length) formData.append("files3", items.files3[0]);
-  
+
     // ✅ แนบข้อมูล supplier ทั้งหมดเป็น JSON string
     formData.append("suppliers", JSON.stringify(items.suppliers));
-  
+
     // ✅ ส่งออกด้วย fetch หรือ axios
+    setloadingsend(true);
     try {
-      const res = await fetch("/api/your-endpoint", {
-        method: "POST",
-        body: formData,
-      });
-  
+      const res = await fetch(
+        "https://servsiam-backend-a61de3db6766.herokuapp.com/api/compare_prices/add",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
       const result = await res.json();
-      console.log("✅ ส่งข้อมูลสำเร็จ:", result);
+      Swal.fire({
+        icon: "success",
+        title: "อัปเดตข้อมูลเรียบร้อยแล้ว",
+        confirmButtonText: "ตกลง",
+      }).then(() => {
+        navigate("/PriceparsionHistory");
+      });
     } catch (error) {
-      console.error("❌ เกิดข้อผิดพลาด:", error);
+      Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "ไม่สามารถอัปเดตข้อมูลได้",
+        confirmButtonText: "ตกลง",
+      });
+    } finally {
+      setloadingsend(false);
     }
   };
-  
 
   return (
     <div className="min-h-screen bg-gray-100 space-y-4 p-4">
@@ -461,19 +486,35 @@ const Priceparisonform = () => {
 
           <div className="">
             {/* เพิ่มฟิลด์ใหม่ */}
-            <div className="mb-4">
-              <label className="text-lg">เลขที่หนังสือ:</label>
-              <input
-                type="text"
-                value={formInput.documentNo}
-                disabled={isSellerDisabled}
-                onChange={(e) =>
-                  handleInputChange("documentNo", e.target.value)
-                }
-                className={`border rounded p-2 w-full ${
-                  errors.documentNo ? "border-red-500" : "border-gray-300"
-                }`}
-              />
+            <div className="flex gap-3 w-full mb-4">
+              <div className="w-full">
+                <label className="text-lg">แผนก:</label>
+                <input
+                  type="text"
+                  value={formInput.department}
+                  disabled={isSellerDisabled}
+                  onChange={(e) =>
+                    handleInputChange("department", e.target.value)
+                  }
+                  className={`border rounded p-2 w-full ${
+                    errors.documentNo ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+              </div>
+              <div className="w-full">
+                <label className="text-lg">เลขที่หนังสือ:</label>
+                <input
+                  type="text"
+                  value={formInput.documentNo}
+                  disabled={isSellerDisabled}
+                  onChange={(e) =>
+                    handleInputChange("documentNo", e.target.value)
+                  }
+                  className={`border rounded p-2 w-full ${
+                    errors.documentNo ? "border-red-500" : "border-gray-300"
+                  }`}
+                />
+              </div>
             </div>
 
             <div className="mb-4">
@@ -526,38 +567,38 @@ const Priceparisonform = () => {
               แนบไฟล์เอกสารสำหรับผู้จัดจำหน่าย
             </h3>
             <div className="grid grid-cols-3 gap-4">
-            {supplierHeaders.map((header, index) => {
-              const fileKey = `files${index + 1}`;
-              const selectedFiles = formInput[fileKey] || [];
+              {supplierHeaders.map((header, index) => {
+                const fileKey = `files${index + 1}`;
+                const selectedFiles = formInput[fileKey] || [];
 
-              return (
-                <div key={index} className="mb-4">
-                  <label className="text-md font-semibold">{header}:</label>
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    ref={fileInputRefs.current[index]}
-                    onChange={(e) => handleFileChange(index, e)}
-                    className="border rounded p-2 w-full mt-1"
-                  />
+                return (
+                  <div key={index} className="mb-4">
+                    <label className="text-md font-semibold">{header}:</label>
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      ref={fileInputRefs.current[index]}
+                      onChange={(e) => handleFileChange(index, e)}
+                      className="border rounded p-2 w-full mt-1"
+                    />
 
-                  <ul className="mt-2">
-                    {selectedFiles.map((file, i) => (
-                      <li key={i} className="flex items-center space-x-2">
-                        <span>{file.name}</span>
-                        <button
-                          type="button"
-                          className="text-red-500"
-                          onClick={() => handleRemoveFile(index)}
-                        >
-                          ลบ
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            })}
+                    <ul className="mt-2">
+                      {selectedFiles.map((file, i) => (
+                        <li key={i} className="flex items-center space-x-2">
+                          <span>{file.name}</span>
+                          <button
+                            type="button"
+                            className="text-red-500"
+                            onClick={() => handleRemoveFile(index)}
+                          >
+                            ลบ
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -589,12 +630,6 @@ const Priceparisonform = () => {
               <tr className="border-b">
                 <th className="py-2 px-4 border">#</th>
                 <th className="py-2 px-4 border">ชื่อสินค้า</th>
-                {/* <th className="py-2 px-4 border">เลขที่หนังสือ</th>
-                <th className="py-2 px-4 border">วันที่เจ้าหน้าที่จัดซื้อ</th>
-                <th className="py-2 px-4 border">
-                  วันที่หัวหน้าแผนกบริการจัดซื้อ
-                </th>
-                <th className="py-2 px-4 border">วันที่ผู้จัดการฝ่าย</th> */}
                 {supplierHeaders.map((header, index) => (
                   <th key={index} className="py-2 px-4 border">
                     {header}
@@ -611,13 +646,6 @@ const Priceparisonform = () => {
                   <td className="py-2 px-4 border">
                     {supplierEntry.productName}
                   </td>
-                  {/* <td className="py-2 px-4 border">{items.documentNo}</td> */}
-                  {/*
-                  <td className="py-2 px-4 border">{items.purchasingDate}</td>
-                  <td className="py-2 px-4 border">
-                    {items.departmentHeadDate}
-                  </td>
-                  <td className="py-2 px-4 border">{items.managerDate}</td> */}
 
                   {supplierEntry.items.map((supplier, i) => (
                     <td key={i} className="py-2 px-4 border">
@@ -648,7 +676,7 @@ const Priceparisonform = () => {
                           files2: items.files2,
                           files3: items.files3,
                         });
-                        setEditIndex(index); // ✅ สำคัญมาก
+                        setEditIndex(index);
                         setIsSellerDisabled(true);
 
                         // ✅ เลื่อนกลับขึ้นไปหาฟอร์ม
@@ -679,7 +707,7 @@ const Priceparisonform = () => {
         </div>
 
         {/* ฟอรฺม PDF  */}
-        <div ref={tableToPdfRef} className="p-6">
+        {/* <div ref={tableToPdfRef} className="p-6">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h1 className="text-lg font-bold">
@@ -768,28 +796,28 @@ const Priceparisonform = () => {
               ผู้จัดการฝ่าย : วันที่ {dateformat(items.managerDate)}
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex justify-end space-x-4 mt-4">
-        <button
+        {/* <button
           onClick={generatePDF}
           className="bg-blue-500 text-white px-4 py-2 rounded"
         >
           ดาวน์โหลด PDF
-        </button>
+        </button> */}
         <button
-          onClick={SendData}
-          className="bg-green-500 text-white px-4 py-2 rounded"
+          onClick={sendDataToBackend}
+          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow"
         >
-          ส่งข้อมูล
+          {loadingsend ? "กําลังส่ง..." : "ส่งบันทึกข้อมูล"}
         </button>
-        <button
+        {/* <button
           onClick={handlePrint}
           className="bg-gray-500 text-white px-4 py-2 rounded"
         >
           พิมพ์
-        </button>
+        </button> */}
       </div>
     </div>
   );
