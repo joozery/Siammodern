@@ -1,114 +1,62 @@
-import React from 'react'
-import './listing.css'
-
-// imported icons ===========>
-import {AiFillHeart} from 'react-icons/ai'
-import {BsArrowRightShort} from 'react-icons/bs'
-import {AiOutlineHeart} from 'react-icons/ai'
-
-// imported Images ===========>
-import img from '../../../Assets/image (1).png'
-import img1 from '../../../Assets/image (9).png'
-import img2 from '../../../Assets/image (8).png'
-import img3 from '../../../Assets/image (10).png'
-import user1 from '../../../Assets/user (1).png'
-import user2 from '../../../Assets/user (2).png'
-import user3 from '../../../Assets/user (3).png'
-import user4 from '../../../Assets/user (4).png'
+import React, { useEffect, useState } from 'react';
+import './listing.css';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { BsArrowRightShort } from 'react-icons/bs';
 
 const Listing = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("https://servsiam-backend-a61de3db6766.herokuapp.com/api/products?page=1&limit=4")
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setProducts(data.products);
+        } else {
+          console.error("Failed to fetch products:", data.message);
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("❌ Error fetching products:", err);
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <div className='lisitingSection'>
-
       <div className="heading flex">
         <h1>My Listings</h1>
         <button className='btn flex'>
-          See All <BsArrowRightShort className="icon"/>
+          See All <BsArrowRightShort className="icon" />
         </button>
       </div>
 
       <div className="secContainer flex">
-        <div className="singleItem">
-          <AiFillHeart className="icon"/>
-          <img src={img} alt="Image Name" />
-          <h3>Annual Vince</h3>
-        </div>
-
-        <div className="singleItem">
-          <AiOutlineHeart className="icon"/>
-          <img src={img1} alt="Image Name" />
-          <h3>Coffee Plant</h3>
-        </div>
-
-        <div className="singleItem">
-          <AiOutlineHeart className="icon"/>
-          <img src={img2} alt="Image Name" />
-          <h3>Button Fern</h3>
-        </div>
-
-        <div className="singleItem">
-          <AiFillHeart className="icon"/>
-          <img src={img3} alt="Image Name" />
-          <h3>Spider Plant</h3>
-        </div>
-      </div>
-
-      <div className="sellers flex">
-        <div className="topSellers">
-          <div className="heading flex">
-            <h3>Top Sellers</h3>
-            <button className='btn flex'>
-              See All <BsArrowRightShort className="icon"/>
-             </button>
-          </div>
-
-          <div className="card flex">
-            <div className="users">
-              <img src={user1} alt="User Image" />
-              <img src={user2} alt="User Image" />
-              <img src={user3} alt="User Image" />
-              <img src={user4} alt="User Image" />
+        {loading ? (
+          <p>Loading...</p>
+        ) : products.length > 0 ? (
+          products.map((item, index) => (
+            <div className="singleItem" key={item.id}>
+              {index % 2 === 0 ? (
+                <AiFillHeart className="icon" />
+              ) : (
+                <AiOutlineHeart className="icon" />
+              )}
+              <img
+                src={item.image_url || "/placeholder.jpg"}
+                alt={item.product_name}
+              />
+              <h3>{item.product_name}</h3>
             </div>
-            <div className="cardText">
-              <span>
-                14.556 Plant sold <br />
-                <small>
-                  21 Sellers <span className="date">7 Days</span>
-                </small>
-              </span>
-            </div>
-          </div>
-        </div>
-
-
-        <div className="featuredSellers">
-          <div className="heading flex">
-            <h3>Featured Sellers</h3>
-            <button className='btn flex'>
-              See All <BsArrowRightShort className="icon"/>
-             </button>
-          </div>
-
-          <div className="card flex">
-            <div className="users">
-              <img src={user3} alt="User Image" />
-              <img src={user1} alt="User Image" />
-              <img src={user4} alt="User Image" />
-              <img src={user2} alt="User Image" />
-            </div>
-            <div className="cardText">
-              <span>
-                28,556 Plant sold <br />
-                <small>
-                  26 Sellers <span className="date">31 days</span>
-                </small>
-              </span>
-            </div>
-          </div>
-        </div>
+          ))
+        ) : (
+          <p>No products found.</p>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Listing
+export default Listing;

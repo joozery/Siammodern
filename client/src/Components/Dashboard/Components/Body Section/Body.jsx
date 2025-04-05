@@ -45,7 +45,7 @@ const Body = () => {
       {currentPath === '/Priceparsion' && <Priceparsionform />}
       {currentPath === '/PriceparsionHistory' && <ReceivingPurchaseHistoryData />}
       {currentPath === '/summary' && <SummaryContent />} {/* ✅ เพิ่มหน้า Summary */}
-      {currentPath === '/safetystock' && <SafetyStockPage />} 
+      {currentPath === '/SafetyStock' && <SafetyStockPage />} 
 
       {/* ✅ แสดงหน้า SignApprovalPage เฉพาะเมื่อมี id */}
       {currentPath.startsWith('/sign') && id ? <SignApprovalPage id={id} /> : null}

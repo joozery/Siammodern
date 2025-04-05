@@ -45,7 +45,7 @@ function App() {
         <Route path="/UserManagement" element={<ProtectedRoute element={<UserManagement />} />} />
         <Route path="/sign/:id" element={<ProtectedRoute element={<SignApprovalPage />} />} />
         <Route path="/Priceparsion" element={<ProtectedRoute element={<PriceparsionPage />} />} />
-        <Route path="/safetystock" element={<ProtectedRoute element={<SafetyStockPage />} />} />
+        <Route path="/SafetyStock" element={<ProtectedRoute element={<SafetyStockPage />} />} />
         <Route path="/summary" element={<PrivateRoute element={<SummaryPage />} />} /> {/* ✅ เพิ่มหน้า Summary */}
 
         {/* ✅ หากเข้า URL อื่นที่ไม่มี → Redirect ไปหน้า Login */}

@@ -22,21 +22,18 @@ export default function Stock() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   // ดึงข้อมูลสินค้าจาก API
-  // ดึงข้อมูลสินค้าจาก API
-useEffect(() => {
-  const fetchProducts = async () => {
-    try {
-      const response = await axios.get("https://servsiam-backend-a61de3db6766.herokuapp.com/api/products");
-      setProducts(response.data.products); // ✅ ใช้ `response.data.products` ตามโครงสร้าง JSON ของ API
-    } catch (error) {
-      console.error("❌ Error fetching products:", error);
-    }
-    setLoading(false); // ✅ โหลดเสร็จแล้ว
-  };
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("https://servsiam-backend-a61de3db6766.herokuapp.com/api/products");
+        setProducts(response.data.products); // ✅ ใช้ `response.data.products` ตามโครงสร้าง JSON ของ API
+      } catch (error) {
+        console.error("❌ Error fetching products:", error);
+      }
+    };
 
-  fetchProducts();
-}, []);
-
+    fetchProducts();
+  }, []);
 
   // ฟังก์ชันกรองข้อมูลสินค้า
   const filteredData = products.filter((item) => {
@@ -78,13 +75,33 @@ useEffect(() => {
     });
   };
 
+  // Function to handle delete
+  const handleDelete = async () => {
+    try {
+      // Make an API call to delete selected products
+      const deletePromises = selectedRows.map((id) =>
+        axios.delete(`https://servsiam-backend-a61de3db6766.herokuapp.com/api/products/${id}`)
+      );
+      await Promise.all(deletePromises);
+      
+      // Filter out deleted products from the state
+      setProducts(products.filter((product) => !selectedRows.includes(product.id)));
+      setSelectedRows([]); // Clear selected rows
+    } catch (error) {
+      console.error("❌ Error deleting products:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col space-y-4 bg-gray-100 min-h-screen">
       {/* Header Section */}
       <div className="flex justify-between w-full border-b border-black pb-4">
         <h1 className="text-md sm:text-xl font-bold text-gray-800">สต็อกสินค้า (Stock Management)</h1>
         <div className="flex flex-row space-x-3 h-full">
-          <button className="flex items-center justify-center bg-white rounded-lg shadow w-12 h-10 hover:bg-gray-50">
+          <button
+            onClick={handleDelete}
+            className="flex items-center justify-center bg-white rounded-lg shadow w-12 h-10 hover:bg-gray-50"
+          >
             <RiDeleteBin5Line />
           </button>
           <button
