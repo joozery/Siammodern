@@ -33,7 +33,7 @@ const Sidebar = () => {
 
       <div className="menuDiv">
         <h3 className="divTitle font-bold">QUICK MENU</h3>
-        <ul className="menuLists grid gap-4">
+        <ul className="menuLists grid gap-7">
           <li className="listItem">
             <Link to="/dashboard" className="menuLink flex">
               <IoMdSpeedometer className="icon" />
@@ -123,10 +123,25 @@ const Sidebar = () => {
               <span className="smallText">แก้ไขเปรียบเทียบราคา</span>
             </Link>
           </li> */}
+          <div className="pt-10">
+          <li className="listItem logOutBtn">
+            <button
+              onClick={() => {
+                localStorage.removeItem("token"); // ลบ token
+                localStorage.removeItem("user"); // ลบข้อมูลผู้ใช้
+                window.location.href = "/"; // Redirect ไปหน้า Login
+              }}
+              className="menuLink flex w-full text-left"
+            >
+              <BsFillArrowLeftCircleFill className="icon" />
+              <span className="smallText">ออกจากระบบ</span>
+            </button>
+          </li>
+          </div>
         </ul>
       </div>
 
-      <div className="settingsDiv">
+      {/* <div className="settingsDiv">
         <h3 className="divTitle font-bold"></h3>
         <ul className="menuLists grid gap-4">
           <li className="listItem logOutBtn">
@@ -143,9 +158,9 @@ const Sidebar = () => {
             </button>
           </li>
         </ul>
-      </div>
+      </div> */}
 
-      <div className="sideBarCard">
+      {/* <div className="sideBarCard">
         <BsQuestionCircle className="icon" />
         <div className="cardContent">
           <div className="circle1"></div>
@@ -156,7 +171,7 @@ const Sidebar = () => {
 
           <button className="btn">Go to help center</button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

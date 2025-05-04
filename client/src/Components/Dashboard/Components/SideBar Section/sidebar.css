@@ -169,7 +169,7 @@
     display: none !important;
   }
 }
-@media screen and (max-width: 745px) {
+@media screen and (max-width: 768px) {
   .sideBar .logoDiv {
     text-align: center;
     margin: auto;
@@ -193,8 +193,11 @@
   .sideBar .menuDiv .menuLists .listItem .menuLink .icon, .sideBar .settingsDiv .menuLists .listItem .menuLink .icon {
     font-size: var(--h1FontSize);
   }
+  .sideBar .menuDiv .menuLists .listItem, .sideBar .settingsDiv .menuLists .listItem {
+    padding: 0.2rem 0.75rem;
+  }
 }
-@media screen and (max-width: 390px) {
+@media screen and (max-width: 425px) {
   .sideBar .menuDiv, .sideBar .settingsDiv {
     text-align: center;
     margin: auto;
