@@ -5,28 +5,6 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import { _ApiSafyStock } from "../../../../api/saftyStock";
 import { AddSaftyStockPopup } from "./AddSaftyStockPopup";
 
-// {
-//   "id": 12,
-//   "url_Image_product": "https://res.cloudinary.com/degihz25o/image/upload/v1746338861/safetyStock/x8mclo3rtk5ex1szoceo.jpg",
-//   "product_category": "2",
-//   "product_code": "K1S5D6C",
-//   "product_list": "ชุดเครื่องมือ",
-//   "remark": "string",
-//   "number": "",
-//   "model": "Makita",
-//   "color": "ฟ้า",
-//   "size": "",
-//   "qty": 10,
-//   "unit": "กล่อง",
-//   "cost_price": 1500,
-//   "storage_location": "โกดัง",
-//   "date_purchase": "2025-05-04",
-//   "date_expiration": "",
-//   "product_status": "",
-//   "created_at": "2025-05-04T06:07:42.000Z",
-//   "updated_at": "2025-05-04T06:07:42.000Z"
-// },
-
 const API = import.meta.env.VITE_URL_API;
 
 const SafetyStock = () => {
@@ -127,7 +105,6 @@ const SafetyStock = () => {
                   <option value="">เลือกหมวดหมู่</option>
                   <option value="หมวดหมู่1">หมวดหมู่1</option>
                   <option value="หมวดหมู่2">หมวดหมู่2</option>
-                  {/* เพิ่ม options ตามต้องการ */}
                 </select>
               </div>
             </div>
@@ -146,7 +123,7 @@ const SafetyStock = () => {
                   className="block w-full h-10 pl-3 pr-10 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
                   placeholder="เบอร์"
                 />
-                <FiSearch className="absolute right-3 top-2.5 text-gray-400" />
+                {/* <FiSearch className="absolute right-3 top-2.5 text-gray-400" /> */}
               </div>
             </div>
 
@@ -165,7 +142,6 @@ const SafetyStock = () => {
                   <option value="">เลือกรุ่น</option>
                   <option value="รุ่นA">รุ่นA</option>
                   <option value="รุ่นB">รุ่นB</option>
-                  {/* เพิ่ม options ตามต้องการ */}
                 </select>
               </div>
             </div>
@@ -185,7 +161,6 @@ const SafetyStock = () => {
                   <option value="">เลือกสี</option>
                   <option value="สีดำ">สีดำ</option>
                   <option value="สีขาว">สีขาว</option>
-                  {/* เพิ่ม options ตามต้องการ */}
                 </select>
               </div>
             </div>
@@ -206,7 +181,6 @@ const SafetyStock = () => {
                   <option value="20">20</option>
                   <option value="30">30</option>
                   <option value="40">40</option>
-                  {/* เพิ่ม options ตามต้องการ */}
                 </select>
               </div>
             </div>
@@ -219,13 +193,13 @@ const SafetyStock = () => {
               <div className="relative mt-1">
                 <input
                   type="text"
-                  name="productCode"
-                  value={filters.productCode}
+                  name="product_code"
+                  value={filters.product_code}
                   onChange={handleFilterChange}
                   className="block w-full h-10 pl-3 pr-10 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
                   placeholder="รหัสสินค้า"
                 />
-                <FiSearch className="absolute right-3 top-2.5 text-gray-400" />
+                {/* <FiSearch className="absolute right-3 top-2.5 text-gray-400" /> */}
               </div>
             </div>
 
@@ -237,13 +211,13 @@ const SafetyStock = () => {
               <div className="relative mt-1">
                 <input
                   type="text"
-                  name="itemName"
-                  value={filters.itemName}
+                  name="product_list"
+                  value={filters.product_list}
                   onChange={handleFilterChange}
                   className="block w-full h-10 pl-3 pr-10 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"
                   placeholder="รายการ"
                 />
-                <FiSearch className="absolute right-3 top-2.5 text-gray-400" />
+                {/* <FiSearch className="absolute right-3 top-2.5 text-gray-400" /> */}
               </div>
             </div>
           </div>
