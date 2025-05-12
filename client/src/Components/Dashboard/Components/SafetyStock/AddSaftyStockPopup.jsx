@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { _ApiSafyStock } from "../../../../api/saftyStock";
+import Swal from "sweetalert2";
 // import "./AddProductPopup.css";
 
-export const AddSaftyStockPopup = ({ onClose , reloadData }) => {
+export const AddSaftyStockPopup = ({ data, onClose, reloadData, status }) => {
   const [formData, setFormData] = useState({
     category: "",
     sku: "",
@@ -24,6 +24,8 @@ export const AddSaftyStockPopup = ({ onClose , reloadData }) => {
     expirationDate: "",
     status: "",
   });
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -66,39 +68,133 @@ export const AddSaftyStockPopup = ({ onClose , reloadData }) => {
 
     // ✅ Append รูปภาพถ้ามี
     if (formData.image) {
-        formDataToSend.append("url_Image_product", formData.image);
+      formDataToSend.append("url_Image_product", formData.image);
     }
     // Log ข้อมูลทั้งหมดใน formDataToSend
-for (let pair of formDataToSend.entries()) {
-    console.log(pair[0] + ": " + pair[1]);
-}
-// return
-    try {
-        const response = await _ApiSafyStock().Create(formDataToSend);
-        if (response.success === true) {
-            alert("✅ เพิ่มสินค้าสำเร็จ!");
-            onClose(); // ปิด Popup
-            reloadData();
-        } else {
-            alert("❌ เกิดข้อผิดพลาดในการเพิ่มสินค้า");
-        }
-    } catch (error) {
-        console.error("❌ Error submitting the form:", error);
-        alert("❌ Failed to add product.");
+    for (let pair of formDataToSend.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
     }
-};
+    // return
+    setIsLoading(true);
+    try {
+      if (status === "create") {
+        const response = await _ApiSafyStock().Create(formDataToSend);
+        if (response.success) {
+          await Swal.fire({
+            icon: "success",
+            title: "เพิ่มสินค้าสำเร็จ",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          await Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: "ไม่สามารถเพิ่มสินค้าได้",
+          });
+        }
+      } else {
+        const response = await _ApiSafyStock().Update(formDataToSend, data.id);
+        if (response.success) {
+          await Swal.fire({
+            icon: "success",
+            title: "แก้ไขสินค้าสำเร็จ",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        } else {
+          await Swal.fire({
+            icon: "error",
+            title: "เกิดข้อผิดพลาด",
+            text: "ไม่สามารถแก้ไขสินค้าได้",
+          });
+        }
+      }
+
+      onClose();
+      reloadData();
+    } catch (error) {
+      console.error("❌ Error submitting the form:", error);
+      await Swal.fire({
+        icon: "error",
+        title: "เกิดข้อผิดพลาด",
+        text: "กรุณาลองใหม่อีกครั้ง",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Initialize the form with the data passed via props
+  useEffect(() => {
+    if (data && status === "edit") {
+      setFormData({
+        category: data.product_category || "",
+        sku: data.product_code || "",
+        productName: data.product_list || "",
+        remark: data.remark || "",
+        image: data.url_Image_product || null,
+        details: {
+          number: data.number || "",
+          model: data.model || "",
+          color: data.color || "",
+          size: data.size || "",
+          quantity: data.qty || "",
+          unit: data.unit || "",
+          costPrice: data.cost_price || "",
+        },
+        storageLocation: data.storage_location || "",
+        purchaseDate: data.date_purchase || "",
+        expirationDate: data.date_expiration || "",
+        status: data.product_status || "",
+      });
+    }else{
+      setFormData({
+        category: "",
+        sku: "",
+        productName: "",
+        remark: "",
+        image: null,
+        details: {
+          number: "",
+          model: "",
+          color: "",
+          size: "",
+          quantity: "",
+          unit: "",
+          costPrice: "",
+        },
+        storageLocation: "",
+        purchaseDate: "",
+        expirationDate: "",
+        status: "",
+      });
+    }
+  }, [data, status]);
+
+  // useEffect(() => {
+  //   console.log("data:", data);
+  // }, [data]);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
       <div className="bg-white border rounded-lg p-6 w-full max-w-4xl shadow-lg">
-        <h2 className="text-lg font-bold mb-4 text-blue-800">เพิ่ม (Safety Stock)</h2>
+        <h2 className="text-lg font-bold mb-4 text-blue-800">
+          {status === "edit" ? "แก้ไข" : "เพิ่ม"} (Safety Stock)
+        </h2>
         <div className="grid grid-cols-12 gap-4">
           {/* Image Upload */}
           <div className="col-span-12 md:col-span-4 flex flex-col items-center">
             <div className="w-32 h-32 border border-gray-300 flex items-center justify-center mb-4 bg-gray-100">
               {formData.image ? (
                 <img
-                  src={URL.createObjectURL(formData.image)}
+                  src={
+                    // ถ้า formData.image เป็น string (URLเดิม) ให้ใช้ตรงๆ
+                    typeof formData.image === "string"
+                      ? formData.image
+                      : // ถ้าเป็น File ให้สร้าง URL ชั่วคราว
+                        URL.createObjectURL(formData.image)
+                  }
                   alt="Product"
                   className="w-full h-full object-cover rounded-md"
                 />
@@ -122,7 +218,9 @@ for (let pair of formDataToSend.entries()) {
             <h3 className="font-bold text-gray-800 mb-2">ข้อมูลสินค้า</h3>
             <div className="grid grid-cols-12 gap-4">
               <div className="col-span-6">
-                <label className="block text-sm font-medium mb-2">หมวดหมู่ <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium mb-2">
+                  หมวดหมู่ <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
                   name="category"
@@ -133,7 +231,9 @@ for (let pair of formDataToSend.entries()) {
                 />
               </div>
               <div className="col-span-6">
-                <label className="block text-sm font-medium mb-2">รหัสสินค้า <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium mb-2">
+                  รหัสสินค้า <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
                   name="sku"
@@ -144,7 +244,9 @@ for (let pair of formDataToSend.entries()) {
                 />
               </div>
               <div className="col-span-12">
-                <label className="block text-sm font-medium mb-2">รายการ <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium mb-2">
+                  รายการ <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
                   name="productName"
@@ -231,7 +333,9 @@ for (let pair of formDataToSend.entries()) {
             />
           </div>
           <div className="col-span-6">
-            <label className="block text-sm font-medium mb-2">ราคาต้นทุน (ต่อหน่วย)</label>
+            <label className="block text-sm font-medium mb-2">
+              ราคาต้นทุน (ต่อหน่วย)
+            </label>
             <input
               type="text"
               name="costPrice"
@@ -242,7 +346,9 @@ for (let pair of formDataToSend.entries()) {
           </div>
           {/* Product Details - Extended */}
           <div className="col-span-6">
-            <label className="block text-sm font-medium mb-2">สถานที่จัดเก็บ <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium mb-2">
+              สถานที่จัดเก็บ <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               name="storageLocation"
@@ -253,7 +359,9 @@ for (let pair of formDataToSend.entries()) {
             />
           </div>
           <div className="col-span-6">
-            <label className="block text-sm font-medium mb-2">วันที่ซื้อ <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium mb-2">
+              วันที่ซื้อ <span className="text-red-500">*</span>
+            </label>
             <input
               type="date"
               name="purchaseDate"
@@ -263,7 +371,9 @@ for (let pair of formDataToSend.entries()) {
             />
           </div>
           <div className="col-span-6">
-            <label className="block text-sm font-medium mb-2">วันหมดอายุ <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium mb-2">
+              วันหมดอายุ <span className="text-red-500">*</span>
+            </label>
             <input
               type="date"
               name="expirationDate"
@@ -273,7 +383,9 @@ for (let pair of formDataToSend.entries()) {
             />
           </div>
           <div className="col-span-6">
-            <label className="block text-sm font-medium mb-2">สถานะสินค้า <span className="text-red-500">*</span></label>
+            <label className="block text-sm font-medium mb-2">
+              สถานะสินค้า <span className="text-red-500">*</span>
+            </label>
             <input
               type="text"
               name="status"
@@ -290,13 +402,18 @@ for (let pair of formDataToSend.entries()) {
             onClick={onClose}
             className="bg-gray-400 text-white px-4 py-2 rounded mr-2"
           >
-            Cancel
+            ยกเลิก
           </button>
           <button
+            disabled={isLoading}
             onClick={handleSubmit}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className={`${
+              isLoading
+                ? "bg-gray-400 opacity-50 cursor-not-allowed"
+                : "bg-blue-500"
+            } text-white px-4 py-2 rounded`}
           >
-            Create
+            {status === "edit" ? "บันทึก" : "เพิ่ม"}
           </button>
         </div>
       </div>
