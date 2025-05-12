@@ -499,7 +499,11 @@ const SafetyStock = () => {
                               {item.size}
                             </td>
                             <td className="text-sm text-gray-900">
-                              {item.remaining}
+                              {item.qty <= 10 ? (
+                                <span className="text-red-600">{item.qty}</span>
+                              ) : (
+                                <span className="text-black">{item.qty}</span>
+                              )}
                             </td>
                             <td className="text-sm text-gray-900">
                               {item.product_status}

@@ -22,7 +22,7 @@ export const AddSaftyStockPopup = ({ data, onClose, reloadData, status }) => {
     storageLocation: "",
     purchaseDate: "",
     expirationDate: "",
-    status: "",
+    // status: "",
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -64,7 +64,7 @@ export const AddSaftyStockPopup = ({ data, onClose, reloadData, status }) => {
     formDataToSend.append("storage_location", formData.storageLocation || "");
     formDataToSend.append("date_purchase", formData.purchaseDate || null);
     formDataToSend.append("date_expiration", formData.expirationDate || null);
-    formDataToSend.append("product_status", formData.status || "");
+    // formDataToSend.append("product_status", formData.status || "");
 
     // ✅ Append รูปภาพถ้ามี
     if (formData.image) {
@@ -146,7 +146,7 @@ export const AddSaftyStockPopup = ({ data, onClose, reloadData, status }) => {
         storageLocation: data.storage_location || "",
         purchaseDate: data.date_purchase || "",
         expirationDate: data.date_expiration || "",
-        status: data.product_status || "",
+        // status: data.product_status || "",
       });
     }else{
       setFormData({
@@ -167,7 +167,7 @@ export const AddSaftyStockPopup = ({ data, onClose, reloadData, status }) => {
         storageLocation: "",
         purchaseDate: "",
         expirationDate: "",
-        status: "",
+        // status: "",
       });
     }
   }, [data, status]);
@@ -382,7 +382,7 @@ export const AddSaftyStockPopup = ({ data, onClose, reloadData, status }) => {
               className="w-full border rounded-md p-2"
             />
           </div>
-          <div className="col-span-6">
+          {/* <div className="col-span-6">
             <label className="block text-sm font-medium mb-2">
               สถานะสินค้า <span className="text-red-500">*</span>
             </label>
@@ -394,7 +394,7 @@ export const AddSaftyStockPopup = ({ data, onClose, reloadData, status }) => {
               className="w-full border rounded-md p-2"
               placeholder="สถานะสินค้า"
             />
-          </div>
+          </div> */}
         </div>
 
         <div className="flex justify-end mt-6">
