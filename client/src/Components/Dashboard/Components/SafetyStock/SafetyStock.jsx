@@ -472,7 +472,7 @@ const SafetyStock = () => {
                             key={index}
                             className="odd:bg-white odd:dark:bg-green-50 text-left"
                           >
-                            <td className="px-4 py-4">
+                            <td className="px-4 text-center py-4">
                               <input
                                 type="checkbox"
                                 checked={selectedIds.includes(item.id)}
@@ -480,35 +480,35 @@ const SafetyStock = () => {
                                 className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                               />
                             </td>
-                            <td className="text-sm text-gray-900">
+                            <td className="text-sm text-center text-gray-900">
                               {item.product_code}
                             </td>
-                            <td className="text-sm text-gray-900">
+                            <td className="text-sm text-center text-gray-900">
                               {item.product_list}
                             </td>
-                            <td className="text-sm text-gray-900">
+                            <td className="text-sm text-center text-gray-900">
                               {item.model}
                             </td>
-                            <td className="text-sm text-gray-900">
+                            <td className="text-sm text-center text-gray-900">
                               {item.color}
                             </td>
-                            <td className="text-sm text-gray-900">
+                            <td className="text-sm text-center text-gray-900">
                               {item.number}
                             </td>
-                            <td className="text-sm text-gray-900">
+                            <td className="text-sm text-center text-gray-900">
                               {item.size}
                             </td>
-                            <td className="text-sm text-gray-900">
+                            <td className="text-sm text-center text-gray-900">
                               {item.qty <= 10 ? (
                                 <span className="text-red-600">{item.qty}</span>
                               ) : (
                                 <span className="text-black">{item.qty}</span>
                               )}
                             </td>
-                            <td className="text-sm text-gray-900">
+                            <td className="text-sm text-center text-gray-900">
                               {item.product_status}
                             </td>
-                            <td className="text-sm text-gray-900">
+                            <td className="text-sm text-center text-gray-900">
                               <button onClick={() => handleEdit(item)}>
                                 <img
                                   className="w-6 h-6"
